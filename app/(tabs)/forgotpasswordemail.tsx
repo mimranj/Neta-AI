@@ -33,7 +33,7 @@ type Nav = {
   navigate: (value: string) => void;
 };
 
-const isTestMode = false;
+// const isTestMode = false;
 
 const initialState = {
   inputValues: {
