@@ -203,12 +203,7 @@ const ForgotPasswordPhoneNumber = () => {
           </View>
           <View style={styles.checkBoxContainer}>
             <View style={{ flexDirection: "row" }}>
-              {/* <ExpoCheckbox
-                                style={styles.checkbox}
-                                value={isChecked}
-                                color={isChecked ? COLORS.primary : dark ? COLORS.primary : "gray"}
-                                onValueChange={setChecked}
-                            /> */}
+           
               <CustomCheckbox
                 checked={isChecked}
                 onChange={setChecked}
