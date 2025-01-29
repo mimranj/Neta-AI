@@ -10,7 +10,6 @@ const LoginScreen = () => {
     navigate: (value: string) => void
   }
   const {navigate} = useNavigation<Nav>();
-  
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton}>
@@ -41,7 +40,7 @@ const LoginScreen = () => {
       </TouchableOpacity>
 
       <TouchableOpacity>
-        <Text onPress={() => navigate("forgetpasswordOption")} style={styles.forgotPassword}>Forgot the password?</Text>
+        <Text style={styles.forgotPassword}>Forgot the password?</Text>
       </TouchableOpacity>
 
       <Text style={styles.orText}>or continue with</Text>
