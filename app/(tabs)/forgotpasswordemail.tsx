@@ -21,12 +21,12 @@ import { useNavigation, useRouter } from "expo-router";
 import apiClient from "@/utils/axios-services";
 import CustomCheckbox from "@/components/CustomCheckBox";
 import MainButton from "@/components/MainButton";
-import { validateInput } from "@/utils/actions/formActions";
-import { reducer } from "@/utils/reducers/formReducers";
+ import { reducer } from "@/utils/reducers/formReducers";
 import Header from "@/components/Header";
 import images from "@/constants/images";
 import { COLORS, SIZES } from "@/constants";
 import Input from "@/components/Input";
+import InputField from "@/components/InputField";
 const email = require("../../assets/icons/email.png");
 
 type Nav = {
@@ -49,32 +49,37 @@ const initialState = {
 const ForgotPasswordEmail = () => {
   const router = useRouter();
   const { navigate } = useNavigation<Nav>();
-  const [formState, dispatchFormState] = useReducer(reducer, initialState);
-  const [error, setError] = useState(null);
+  
+  
   const [isChecked, setChecked] = useState(false);
   // const { colors, dark } = useTheme();
   const colors = { background: "white" };
   const dark = false;
+  
+    const [form, setForm] = useState({email:""});
+        const [errors, setErrors] = useState<Partial<any>>({ });
+  const validateForm = (): boolean => {
+    let newErrors: any= {};
 
+    if (!form.email.trim()) {
+      newErrors.email = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = 'Enter a valid email address';
+  }
+  
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+};
   const inputChangedHandler = useCallback(
-    (inputId: string, inputValue: string) => {
-      const result = validateInput(inputId, inputValue);
-      dispatchFormState({
-        inputId,
-        validationResult: result,
-        inputValue,
-      });
+    ( inputValue: string) => {
+        validateForm( );
+        setForm((prev)=>({...prev,  email: inputValue }))
     },
-    [dispatchFormState]
+    [form.email]
   );
-
-  useEffect(() => {
-    if (error) {
-      Alert.alert("An error occured", error);
-    }
-  }, [error]);
-  const [email, setEmail] = useState("");
-
+ 
   const loginHandler = async (email: any) => {
     try {
       console.log("------------------------------------------", email);
@@ -116,7 +121,7 @@ const ForgotPasswordEmail = () => {
           >
             Enter to Your Email
           </Text>
-          <Input
+          {/* <Input
             id="email"
             onInputChanged={inputChangedHandler}
             errorText={formState.inputValidities["email"]}
@@ -124,7 +129,14 @@ const ForgotPasswordEmail = () => {
             placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
             icon={email}
             keyboardType="email-address"
-          />
+          /> */}
+          <InputField
+                label="Email"
+                value={form.email}
+                onChangeText={(text) =>inputChangedHandler(text)}
+                placeholder="Enter Email Address"
+                error={errors?.email}
+            />
           <View style={styles.checkBoxContainer}>
             <View style={{ flexDirection: "row" }}>
               <CustomCheckbox
@@ -137,7 +149,7 @@ const ForgotPasswordEmail = () => {
           <MainButton
             title="Reset Password"
             filled
-            onPress={() => loginHandler(formState.inputValues)}
+            onPress={() => loginHandler(form.email)}
             style={styles.button}
           />
           <TouchableOpacity onPress={() => navigate("login")}>

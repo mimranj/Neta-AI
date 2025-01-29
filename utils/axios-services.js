@@ -1,12 +1,12 @@
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
-// // const BASE_URL = 'https://neta-dev-xi.vercel.app/api/';
+const BASE_URL = 'https://neta-dev-xi.vercel.app/api/';
 // const BASE_URL = 'http://192.168.1.105:3000/api/';
-// const apiClient = axios.create({
-//   baseURL: BASE_URL,
-//   timeout: 10000,
-// });
+const apiClient = axios.create({
+  baseURL: BASE_URL,
+  timeout: 10000,
+});
 
 apiClient.interceptors.request.use(
   async (config) => {
@@ -26,21 +26,5 @@ apiClient.interceptors.request.use(
   }
 );
 
-// apiClient.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
-// // apiClient.interceptors.response.use(
-// //   (response) => response,
-// //   (error) => {
-// //     if (error.response && error.response.status === 401) {
-// //       console.error('Unauthorized! Redirect to login.');
-// //     }
-// //     return Promise.reject(error);
-// //   }
-// // );
-
-// export default apiClient;
+ 
+export default apiClient;
