@@ -9,23 +9,10 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { COLORS, SIZES, icons, images } from '../constants';
-// import Header from '../components/Header';
-// import { reducer } from '../utils/reducers/formReducers';
-// import { validateInput } from '../utils/actions/formActions';
-// import Input from '../components/Input';
-// import Checkbox from 'expo-checkbox';
-// import Button from '../components/Button';
-// import SocialButton from '../components/SocialButton';
-// import OrSeparator from '../components/OrSeparator';
-// import { useTheme } from '../theme/ThemeProvider';
+ 
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 
-// Import Firebase Authentication functions
-// import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-// import app from '../firebaseConfig'; // Import the initialized Firebase app
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from "@/utils/axios-services";
 import Header from "@/components/Header";
 import images from "@/constants/images";
@@ -34,9 +21,7 @@ import MainButton from "@/components/MainButton";
 import CustomCheckbox from "@/components/CustomCheckBox";
 import InputField from "@/components/InputField";
 import { FontAwesome } from "@expo/vector-icons";
-
-// Setup Firebase auth
-// const auth = getAuth(app);
+ 
 
 interface InputValues {
   name: string;
@@ -45,13 +30,7 @@ interface InputValues {
   password: string;
 }
 
-interface InputValidities {
-  name: boolean | undefined;
-  email: boolean | undefined;
-  phone_number: boolean | undefined;
-  password: boolean | undefined;
-}
-
+ 
 type Nav = {
   navigate: (value: string) => void;
 };
@@ -74,6 +53,20 @@ const Signup = () => {
   const validateForm = (): boolean => {
     let newErrors: any = {};
 
+if (!form.password.trim()) {
+      newErrors.password = "Password can't be blank.";
+    } else if (form.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters.";
+    }
+
+    if (!form.phone_number.trim()) {
+      newErrors.phone_number = "Password can't be blank.";
+    } 
+  if (form.phone_number.length<7||form.phone_number.length>7) {
+    newErrors.phone_number =form.phone_number.length<7 ?"Phone number can not be less than 7 digits!":"Phone number can not be more than 7 digits!";
+  }
+
+
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -86,7 +79,9 @@ const Signup = () => {
   };
   const inputChangedHandler = useCallback(
     (inputValue: string, key: string) => {
-      validateForm();
+      if (Object.keys(errors).length !== 0) {
+        setErrors({});
+      }
       setForm((prev) => ({ ...prev, [key]: inputValue }));
     },
     [form]

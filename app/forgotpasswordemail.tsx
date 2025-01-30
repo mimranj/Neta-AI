@@ -8,14 +8,7 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { COLORS, SIZES, icons, images } from '../constants';
-
-// import { reducer } from '../utils/reducers/formReducers';
-// import { validateInput } from '../utils/actions/formActions';
-// import Input from '../components/Input';
-// import Checkbox from 'expo-checkbox';
-// import Button from '../components/Button';
-// import { useTheme } from '../theme/ThemeProvider';
+ 
 import { Image } from "expo-image";
 import { useNavigation, useRouter } from "expo-router";
 import apiClient from "@/utils/axios-services";
@@ -64,21 +57,21 @@ const ForgotPasswordEmail = () => {
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       newErrors.email = 'Enter a valid email address';
   }
-  
-
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
 };
   const inputChangedHandler = useCallback(
     ( inputValue: string) => {
-        validateForm( );
+      if (Object.keys(errors).length !== 0) {
+        setErrors({});
+      }
         setForm((prev)=>({...prev,  email: inputValue }))
     },
     [form.email]
   );
  
   const loginHandler = async (email: any) => {
+    if (validateForm()) {
     try {
       console.log("------------------------------------------", email);
 
@@ -93,6 +86,7 @@ const ForgotPasswordEmail = () => {
     } catch (error: any) {
       Alert.alert("Error", error.response.data.msg);
     }
+  }
   };
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>

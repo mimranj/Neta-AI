@@ -32,6 +32,7 @@ const LoginScreen = () => {
   const validateForm = (): boolean => {
     let newErrors: any = {};
 
+    
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -44,7 +45,9 @@ const LoginScreen = () => {
   const inputChangedHandler = useCallback(
     (inputValue: string, key: string) => {
       setForm((prev) => ({ ...prev, [key]: inputValue }));
-      validateForm();
+      if (Object.keys(errors).length !== 0) {
+        setErrors({});
+      }
     },
     [form]
   );
