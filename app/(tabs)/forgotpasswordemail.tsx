@@ -51,7 +51,6 @@ const ForgotPasswordEmail = () => {
   const { navigate } = useNavigation<Nav>();
   
   
-  const [isChecked, setChecked] = useState(false);
   // const { colors, dark } = useTheme();
   const colors = { background: "white" };
   const dark = false;
@@ -121,15 +120,7 @@ const ForgotPasswordEmail = () => {
           >
             Enter to Your Email
           </Text>
-          {/* <Input
-            id="email"
-            onInputChanged={inputChangedHandler}
-            errorText={formState.inputValidities["email"]}
-            placeholder="Email"
-            placeholderTextColor={dark ? COLORS.grayTie : COLORS.black}
-            icon={email}
-            keyboardType="email-address"
-          /> */}
+         
           <InputField
                 label="Email"
                 value={form.email}
@@ -137,15 +128,7 @@ const ForgotPasswordEmail = () => {
                 placeholder="Enter Email Address"
                 error={errors?.email}
             />
-          <View style={styles.checkBoxContainer}>
-            <View style={{ flexDirection: "row" }}>
-              <CustomCheckbox
-                checked={isChecked}
-                onChange={setChecked}
-                label="Remember me"
-              />
-            </View>
-          </View>
+           
           <MainButton
             title="Reset Password"
             filled

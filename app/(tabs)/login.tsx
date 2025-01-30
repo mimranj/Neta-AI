@@ -14,6 +14,7 @@ import * as SecureStore from "expo-secure-store";
 import InputField from "@/components/InputField";
 import apiClient from "@/utils/axios-services";
 import MainButton from "@/components/MainButton";
+import CustomCheckbox from "@/components/CustomCheckBox";
 
 const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
 
@@ -24,34 +25,34 @@ const LoginScreen = () => {
   const { navigate } = useNavigation<Nav>();
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<Partial<any>>({});
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const validateForm = (): boolean => {
     let newErrors: any = {};
-   
-      if (!form.email.trim()) {
-        newErrors.email = "Email is required";
-      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        newErrors.email = "Enter a valid email address";
-      }
-      setErrors(newErrors);
-    
+
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+    setErrors(newErrors);
+
     return Object.keys(newErrors).length === 0;
   };
   const inputChangedHandler = useCallback(
     (inputValue: string, key: string) => {
       setForm((prev) => ({ ...prev, [key]: inputValue }));
-      validateForm()
+      validateForm();
     },
     [form]
   );
-  
-  const loginHandler = async ( ) => {
-    console.log("click", form,errors);
+
+  const loginHandler = async () => {
+    console.log("click", form, errors);
     // await SecureStore.setItemAsync("key", "value")
-     ;
-      if(!validateForm()){
-       return 
-      }
-    await SecureStore.deleteItemAsync("token")
+    if (!validateForm()) {
+      return;
+    }
+    await SecureStore.deleteItemAsync("token");
 
     if (
       form.email !== "" &&
@@ -62,10 +63,11 @@ const LoginScreen = () => {
         const user = {
           email: form.email,
           password: form.password,
+          rememberMe: isChecked,
         };
 
         const response = await apiClient.post("/auth/login", user);
-    console.log("click", response);
+        console.log("click", response);
 
         if (response.status !== 200) {
           throw new Error("Login failed");
@@ -102,10 +104,8 @@ const LoginScreen = () => {
           label="Email"
           value={form.email}
           onChangeText={(text) => inputChangedHandler(text, "email")}
-           
           placeholder="Enter Email Address"
           error={errors?.email}
-          
         />
       </View>
 
@@ -114,15 +114,17 @@ const LoginScreen = () => {
           label="Password"
           value={form.password}
           onChangeText={(text) => inputChangedHandler(text, "password")}
-      
           placeholder="Enter password"
           error={errors?.password}
         />
       </View>
 
       <View style={styles.rememberContainer}>
-        <TouchableOpacity style={styles.checkbox} />
-        <Text>Remember me</Text>
+        <CustomCheckbox
+          checked={isChecked}
+          onChange={setIsChecked}
+          label="Remember me"
+        />
       </View>
 
       {/* <TouchableOpacity style={styles.loginButton}>
@@ -131,7 +133,7 @@ const LoginScreen = () => {
         </Text>
       </TouchableOpacity> */}
       <MainButton
-        title="Reset Password"
+        title="Login"
         filled
         onPress={loginHandler}
         style={styles.loginButton}
