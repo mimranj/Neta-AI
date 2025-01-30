@@ -11,7 +11,8 @@ export default function TabLayout() {
                 headerStyle: {
                     backgroundColor: '#1EADFF',
                 },
-                headerShown: true,
+
+                headerShown: false,
                 headerShadowVisible: true,
                 headerTintColor: '#fff',
                 tabBarStyle: {
@@ -32,15 +33,6 @@ export default function TabLayout() {
                 name="about"
                 options={{
                     title: 'About',
-                    tabBarIcon: ({ color, focused }) => (
-                        <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="login"
-                options={{
-                    title: 'Login',
                     tabBarIcon: ({ color, focused }) => (
                         <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
                     ),

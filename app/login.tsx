@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react";
+import { Platform } from "react-native";
 import {
   View,
   Text,
@@ -9,12 +10,13 @@ import {
   Alert,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import InputField from "@/components/InputField";
 import apiClient from "@/utils/axios-services";
 import MainButton from "@/components/MainButton";
 import CustomCheckbox from "@/components/CustomCheckBox";
+import { useRouter } from "expo-router";
 
 const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
 
@@ -48,13 +50,12 @@ const LoginScreen = () => {
   );
 
   const loginHandler = async () => {
-    console.log("click", form, errors);
-    // await SecureStore.setItemAsync("key", "value")
     if (!validateForm()) {
       return;
     }
-    setIsLoading(true)
-    await SecureStore.deleteItemAsync("token");
+    if (Platform.OS != "web") {
+      await SecureStore.deleteItemAsync("token");
+    }
 
     if (
       form.email !== "" &&
@@ -67,27 +68,22 @@ const LoginScreen = () => {
           password: form.password,
           rememberMe: isChecked,
         };
-
         const response = await apiClient.post("/auth/login", user);
-        console.log("login response", response);
-
         if (response.status !== 200) {
           throw new Error("Login failed");
         }
 
         const { token } = response.data;
-        await SecureStore.setItemAsync("token", token);
-
+        if (Platform.OS != "web") {
+          await SecureStore.setItemAsync("token", token);
+        }
         console.log("Login successful, token saved.", response.status);
-        navigate("home");
+        router.replace("/home");
         Alert.alert("Logged In Successfully!");
-        return response.data;
-      } catch (error) {
-        setIsLoading(false)
-        navigate("home");
-        console.error("Login failed:", error);
-        Alert.alert("Login Failed", "Invalid email or password.");
-        throw error;
+      } catch (error: any) {
+        router.replace("/home"); // for now, we will have to remove this
+        console.error("Login failed:===============", error.message);
+        Alert.alert(error.message);
       }
     }
   };
