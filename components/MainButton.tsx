@@ -37,6 +37,7 @@ const MainButton: React.FC<ButtonProps> = (props) => {
 
     return (
         <TouchableOpacity
+        disabled={isLoading}
             style={[styles.btn, { backgroundColor: bgColor }, style]}
             onPress={onPress}
             {...rest}>

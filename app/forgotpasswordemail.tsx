@@ -27,7 +27,6 @@ import images from "@/constants/images";
 import { COLORS, SIZES } from "@/constants";
 import Input from "@/components/Input";
 import InputField from "@/components/InputField";
-const email = require("../../assets/icons/email.png");
 
 type Nav = {
   navigate: (value: string) => void;

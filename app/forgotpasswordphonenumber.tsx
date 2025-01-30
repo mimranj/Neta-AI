@@ -12,11 +12,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import { COLORS, SIZES, icons, images } from '../constants';
-// import Header from '../components/Header';
-// import Checkbox from 'expo-checkbox';
-// import Button from '../components/Button';
-// import { useTheme } from '../theme/ThemeProvider';
+ 
 import { useNavigation } from "expo-router";
 import { Image } from "expo-image";
 import Header from "@/components/Header";
@@ -24,8 +20,7 @@ import MainButton from "@/components/MainButton";
 import { COLORS, SIZES } from "@/constants";
 import images from "@/constants/images";
 import CustomCheckbox from "@/components/CustomCheckBox";
-// import ExpoCheckbox from 'expo-checkbox/build/ExpoCheckbox';
-const down = require("../../assets/icons/down.png");
+const down = require("../assets/icons/down.png");
 
 type Nav = {
   navigate: (value: string) => void;
