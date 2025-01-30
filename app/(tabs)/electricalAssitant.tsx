@@ -15,15 +15,15 @@ const chat = require("../../assets/icons/chat.png");
 const ElectricalAssitantScreen = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([
-    { id: "1", text: "Hello! How can I assist you?" },
-    { id: "2", text: "What do you need help with today?" },
+    { sender:true,id: "1", text: "Hello! How can I assist you?" },
+    {sender:false, id: "2", text: "What do you need help with today?" },
   ]);
 
   const sendMessage = () => {
     if (message.trim()) {
       setMessages([
         ...messages,
-        { id: String(messages.length + 1), text: message },
+        { id: String(messages.length + 1), text: message,sender:false },
       ]);
       setMessage("");
     }
@@ -45,7 +45,7 @@ const ElectricalAssitantScreen = () => {
           data={messages}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <Text style={styles.message}>{item.text}</Text>
+            <Text style={item.sender ? styles.message:styles.receiver}>{item.text}</Text>
           )}
           contentContainerStyle={styles.messageContainer}
         />
@@ -53,7 +53,7 @@ const ElectricalAssitantScreen = () => {
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="Ask a question..."
+          placeholder="Chat with engineer..."
           placeholderTextColor="#888"
           value={message}
           onChangeText={setMessage}
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   message: {
-    backgroundColor: "#0073b7",
+    backgroundColor: COLORS.primary,
     color: "white",
     padding: 10,
     borderRadius: 10,
@@ -129,6 +129,14 @@ const styles = StyleSheet.create({
   iconButton: {
     padding: 10,
   },
+  receiver:{
+    backgroundColor:COLORS.gray,
+    color: "white",
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 5,
+    alignSelf: "flex-end",
+  }
 });
 
 export default ElectricalAssitantScreen;
