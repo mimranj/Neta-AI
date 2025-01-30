@@ -3,21 +3,16 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, FlatList, Alert } from
 import { Ionicons } from '@expo/vector-icons';
 import Dropdown from '@/components/Dropdown';
 import { useNavigation } from 'expo-router';
+import MainButton from '@/components/MainButton';
+import { SIZES } from '@/constants';
 
 type Nav = {
     navigate: (value: string) => void
 };
 const HomeScreen = () => {
     const { navigate } = useNavigation<Nav>();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-    const handleAssistantSelect = (value: string | null) => {
-        setIsDropdownOpen(false);
-        // if (value) {
-        //     navigation.navigate('chat', { assistant: value });
-        // }
-        Alert.alert('Assistant Selected', `You selected: ${value}`);
-    };
+   
 
     return (
         <View style={styles.container}>
@@ -31,15 +26,39 @@ const HomeScreen = () => {
                     <Ionicons name="settings-outline" size={24} color="black" />
                 </TouchableOpacity>
             </View>
-            <View>
-                <Dropdown options={['Electrical Assistant', 'Estimate Assistant']} onSelect={handleAssistantSelect} />
+            <View style={styles.centered}>
+
+            <Text style={styles.welcomeText}>Welcome to {'\n'} <Text style={styles.highlight}>Neta-Ai</Text></Text>
+
+            <MainButton
+              title="Start Chat with Electrical Assistant"
+              filled
+              onPress={()=>navigate('electricalAssitant')}
+              style={styles.button}
+            />
+            <MainButton
+              title="Start Chat with Estimate Assistant"
+              filled
+              onPress={()=>navigate('estimateAssitant')}
+              style={styles.button}
+            />
             </View>
-            <Text style={styles.welcomeText}>Welcome to {'\n'} <Text style={styles.highlight}>Neta</Text></Text>
+
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    centered:{
+flex:1,
+justifyContent:"center",
+alignItems:"center"
+    },
+    button: {
+        marginVertical: 6,
+        width: SIZES.width - 32,
+        borderRadius: 30,
+      },
     container: {
         flex: 1,
         backgroundColor: '#F5F5F5',
@@ -74,6 +93,7 @@ const styles = StyleSheet.create({
         color: '#1EADFF',
     },
     highlight: {
+        textAlign:"center",
         fontSize: 30,
         fontWeight: 'bold',
     },

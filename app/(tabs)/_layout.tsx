@@ -43,6 +43,8 @@ export default function TabLayout() {
                 <Stack.Screen name="profile" />
                 <Stack.Screen name="editprofile" />
                 <Stack.Screen name="subscription" />
+                <Stack.Screen name="electricalAssitant" />
+                <Stack.Screen name="estimateAssitant" />
 
             </Stack>
         </Tabs>

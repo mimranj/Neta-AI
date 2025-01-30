@@ -97,19 +97,26 @@ if (!form.password.trim()) {
           email: form.email,
           phone_number: form.phone_number,
           password: form.password,
+          terms_accepted: isChecked,
         };
         const response = await apiClient.post("/auth/register", user);
+        console.log(response);
+        
         if (response.status !== 201) {
           throw new Error("Account creation failed!");
         }
+        Alert.alert(
+          "success",
+           response?.data?.msg
+        );
         navigate("login");
-      } catch (error) {
+      } catch (error:any) {
         setIsLoading(false);
         Alert.alert(
           "Failed",
-          "Please fill all fields & accept terms & conditions"
+          error.response.status===400?"User with this email already exists!":"Something went worng!"
         );
-        console.error("Error during signup:", error);
+        console.error("Error during signup:", error.response.data);
       }
     } else {
       Alert.alert("Invalid form", "Please fill in the form correctly");
