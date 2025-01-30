@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomLeftRadius: 25,
     borderBottomRightRadius: 25,
-    boxShadow: 'black',
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 3,
