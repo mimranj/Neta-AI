@@ -21,7 +21,7 @@ const CustomCheckbox = ({ checked, onChange, label }:any) => {
           backgroundColor: checked ? COLORS.primary : COLORS.white,
         }}
       >
-        {checked && <Text style={{ color: COLORS.white, fontSize: 16 }}>✓</Text>}
+        {checked && <Text style={{ color: COLORS.white, fontSize: 12 }}>✓</Text>}
       </View>
 
       {/* Checkbox Label */}

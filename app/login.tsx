@@ -24,6 +24,7 @@ const LoginScreen = () => {
   };
   const { navigate } = useNavigation<Nav>();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<any>>({});
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const validateForm = (): boolean => {
@@ -52,6 +53,7 @@ const LoginScreen = () => {
     if (!validateForm()) {
       return;
     }
+    setIsLoading(true)
     await SecureStore.deleteItemAsync("token");
 
     if (
@@ -67,7 +69,7 @@ const LoginScreen = () => {
         };
 
         const response = await apiClient.post("/auth/login", user);
-        console.log("click", response);
+        console.log("login response", response);
 
         if (response.status !== 200) {
           throw new Error("Login failed");
@@ -81,6 +83,7 @@ const LoginScreen = () => {
         Alert.alert("Logged In Successfully!");
         return response.data;
       } catch (error) {
+        setIsLoading(false)
         navigate("home");
         console.error("Login failed:", error);
         Alert.alert("Login Failed", "Invalid email or password.");
@@ -95,7 +98,11 @@ const LoginScreen = () => {
         <FontAwesome name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
 
-      <Image source={PlaceholderImage} style={styles.logo} resizeMode="contain" />
+      <Image
+        source={PlaceholderImage}
+        style={styles.logo}
+        resizeMode="contain"
+      />
 
       <Text style={styles.title}>Login to Your Account</Text>
 
@@ -133,12 +140,13 @@ const LoginScreen = () => {
         </Text>
       </TouchableOpacity> */}
       <MainButton
+      isLoading={isLoading}
         title="Login"
         filled
         onPress={loginHandler}
         style={styles.loginButton}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>navigate("forgetpasswordOption")}>
         <Text style={styles.forgotPassword}>Forgot the password?</Text>
       </TouchableOpacity>
 
@@ -156,7 +164,7 @@ const LoginScreen = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigate("signup")}>
         <Text style={styles.signupText}>
           Don't have an account? <Text style={styles.signupLink}>Sign Up</Text>
         </Text>
@@ -191,11 +199,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "#f3f3f3",
-    padding: 10,
     borderRadius: 8,
     width: "100%",
-    marginBottom: 10,
   },
   icon: {
     marginRight: 10,

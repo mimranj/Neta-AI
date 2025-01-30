@@ -7,6 +7,9 @@ export default function RootLayout() {
       <Stack.Screen name="+not-found" />
       <Stack.Screen name="signup" />
       <Stack.Screen name="login" />
+      <Stack.Screen name="forgetpasswordOption" />
+      <Stack.Screen name="forgotpasswordemail" />
+      <Stack.Screen name="forgotpasswordphonenumber" />
      
     </Stack>
   );

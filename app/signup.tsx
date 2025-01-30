@@ -105,7 +105,7 @@ const Signup = () => {
         };
         const response = await apiClient.post("/auth/register", user);
         if (response.status !== 201) {
-          throw new Error("Login failed");
+          throw new Error("Account creation failed!");
         }
         navigate("login");
       } catch (error) {
@@ -144,7 +144,7 @@ const Signup = () => {
             Create Your Account
           </Text>
           <InputField
-            label="Email"
+            label="Name"
             value={form.name}
             onChangeText={(text) => inputChangedHandler(text, "name")}
             placeholder="Enter name..."
@@ -193,6 +193,7 @@ const Signup = () => {
           </View>
           <View style={styles.centered}>
             <MainButton
+            isLoading={isLoading}
               title="Sign Up"
               filled
               onPress={signupHandler}
@@ -316,6 +317,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   orText: {
+    textAlign:"center",
     marginVertical: 10,
     color: "gray",
   },
