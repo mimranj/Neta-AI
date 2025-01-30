@@ -17,24 +17,16 @@ export default function TabLayout() {
                 headerTintColor: '#fff',
                 tabBarStyle: {
                     backgroundColor: 'white',
+                    display: 'none',
                 },
             }}
         >
             <Tabs.Screen
-                name="index"
+                name="home"
                 options={{
                     title: 'Home',
                     tabBarIcon: ({ color, focused }) => (
                         <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
-                    ),
-                }}
-            />
-            <Tabs.Screen
-                name="about"
-                options={{
-                    title: 'About',
-                    tabBarIcon: ({ color, focused }) => (
-                        <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
                     ),
                 }}
             />
