@@ -33,20 +33,13 @@ type Nav = {
 
 const ForgotPasswordPhoneNumber = () => {
   const { navigate } = useNavigation<Nav>();
-  const [error, setError] = useState(null);
-  const [isChecked, setChecked] = useState(false);
   const [areas, setAreas] = useState([]);
   const [selectedArea, setSelectedArea] = useState<any>(null);
   const [modalVisible, setModalVisible] = useState(false);
   // const { colors, dark } = useTheme();
   const dark = false;
   const colors = { background: "white" };
-  useEffect(() => {
-    if (error) {
-      Alert.alert("An error occured", error);
-    }
-  }, [error]);
-
+  
   // fetch codes from rescountries api
   useEffect(() => {
     fetch("https://restcountries.com/v2/all")
@@ -201,22 +194,7 @@ const ForgotPasswordPhoneNumber = () => {
               keyboardType="numeric"
             />
           </View>
-          <View style={styles.checkBoxContainer}>
-            <View style={{ flexDirection: "row" }}>
-              {/* <ExpoCheckbox
-                                style={styles.checkbox}
-                                value={isChecked}
-                                color={isChecked ? COLORS.primary : dark ? COLORS.primary : "gray"}
-                                onValueChange={setChecked}
-                            /> */}
-              <CustomCheckbox
-                checked={isChecked}
-                onChange={setChecked}
-                label="Remember me"
-              />
-               
-            </View>
-          </View>
+          
           <MainButton
             title="Reset Password"
             filled

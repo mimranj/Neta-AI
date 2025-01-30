@@ -1,15 +1,94 @@
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from "react-native";
+import React, { useCallback, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
-const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
+import * as SecureStore from "expo-secure-store";
+import InputField from "@/components/InputField";
+import apiClient from "@/utils/axios-services";
+import MainButton from "@/components/MainButton";
+import CustomCheckbox from "@/components/CustomCheckBox";
 
+const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
 
 const LoginScreen = () => {
   type Nav = {
-    navigate: (value: string) => void
-  }
-  const {navigate} = useNavigation<Nav>();
+    navigate: (value: string) => void;
+  };
+  const { navigate } = useNavigation<Nav>();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState<Partial<any>>({});
+  const [isChecked, setIsChecked] = useState<boolean>(false);
+  const validateForm = (): boolean => {
+    let newErrors: any = {};
+
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Enter a valid email address";
+    }
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+  const inputChangedHandler = useCallback(
+    (inputValue: string, key: string) => {
+      setForm((prev) => ({ ...prev, [key]: inputValue }));
+      validateForm();
+    },
+    [form]
+  );
+
+  const loginHandler = async () => {
+    console.log("click", form, errors);
+    // await SecureStore.setItemAsync("key", "value")
+    if (!validateForm()) {
+      return;
+    }
+    await SecureStore.deleteItemAsync("token");
+
+    if (
+      form.email !== "" &&
+      form.password !== "" &&
+      Object.keys(errors).length === 0
+    ) {
+      try {
+        const user = {
+          email: form.email,
+          password: form.password,
+          rememberMe: isChecked,
+        };
+
+        const response = await apiClient.post("/auth/login", user);
+        console.log("click", response);
+
+        if (response.status !== 200) {
+          throw new Error("Login failed");
+        }
+
+        const { token } = response.data;
+        await SecureStore.setItemAsync("token", token);
+
+        console.log("Login successful, token saved.", response.status);
+        navigate("home");
+        Alert.alert("Logged In Successfully!");
+        return response.data;
+      } catch (error) {
+        navigate("home");
+        console.error("Login failed:", error);
+        Alert.alert("Login Failed", "Invalid email or password.");
+        throw error;
+      }
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton}>
@@ -21,24 +100,44 @@ const LoginScreen = () => {
       <Text style={styles.title}>Login to Your Account</Text>
 
       <View style={styles.inputContainer}>
-        <FontAwesome name="envelope" size={20} color="gray" style={styles.icon} />
-        <TextInput placeholder="Email" style={styles.input} />
+        <InputField
+          label="Email"
+          value={form.email}
+          onChangeText={(text) => inputChangedHandler(text, "email")}
+          placeholder="Enter Email Address"
+          error={errors?.email}
+        />
       </View>
 
       <View style={styles.inputContainer}>
-        <FontAwesome name="lock" size={20} color="gray" style={styles.icon} />
-        <TextInput placeholder="Password" secureTextEntry style={styles.input} />
+        <InputField
+          label="Password"
+          value={form.password}
+          onChangeText={(text) => inputChangedHandler(text, "password")}
+          placeholder="Enter password"
+          error={errors?.password}
+        />
       </View>
 
       <View style={styles.rememberContainer}>
-        <TouchableOpacity style={styles.checkbox} />
-        <Text>Remember me</Text>
+        <CustomCheckbox
+          checked={isChecked}
+          onChange={setIsChecked}
+          label="Remember me"
+        />
       </View>
 
-      <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginText} onPress={() => navigate("home")}>Login</Text>
-      </TouchableOpacity>
-
+      {/* <TouchableOpacity style={styles.loginButton}>
+        <Text style={styles.loginText} onPress={loginHandler}>
+          Login
+        </Text>
+      </TouchableOpacity> */}
+      <MainButton
+        title="Login"
+        filled
+        onPress={loginHandler}
+        style={styles.loginButton}
+      />
       <TouchableOpacity>
         <Text style={styles.forgotPassword}>Forgot the password?</Text>
       </TouchableOpacity>
@@ -58,7 +157,9 @@ const LoginScreen = () => {
       </View>
 
       <TouchableOpacity>
-        <Text style={styles.signupText}>Don't have an account? <Text style={styles.signupLink}>Sign Up</Text></Text>
+        <Text style={styles.signupText}>
+          Don't have an account? <Text style={styles.signupLink}>Sign Up</Text>
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -90,7 +191,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#f3f3f3",
+    // backgroundColor: "#f3f3f3",
     padding: 10,
     borderRadius: 8,
     width: "100%",
