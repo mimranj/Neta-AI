@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -11,7 +11,8 @@ export default function TabLayout() {
                 headerStyle: {
                     backgroundColor: '#1EADFF',
                 },
-                headerShadowVisible: false,
+                headerShown: true,
+                headerShadowVisible: true,
                 headerTintColor: '#fff',
                 tabBarStyle: {
                     backgroundColor: 'white',
@@ -36,6 +37,21 @@ export default function TabLayout() {
                     ),
                 }}
             />
+            <Tabs.Screen
+                name="login"
+                options={{
+                    title: 'Login',
+                    tabBarIcon: ({ color, focused }) => (
+                        <Ionicons name={focused ? 'information-circle' : 'information-circle-outline'} color={color} size={24} />
+                    ),
+                }}
+            />
+            <Stack>
+                <Stack.Screen name="home" />
+                <Stack.Screen name="profile" />
+                <Stack.Screen name="editprofile" />
+                <Stack.Screen name="subscription" />
+            </Stack>
         </Tabs>
     );
 }
