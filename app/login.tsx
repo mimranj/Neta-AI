@@ -56,7 +56,7 @@ const LoginScreen = () => {
     if (Platform.OS != "web") {
       await SecureStore.deleteItemAsync("token");
     }
-
+    setIsLoading(true);
     if (
       form.email !== "" &&
       form.password !== "" &&
@@ -77,10 +77,13 @@ const LoginScreen = () => {
         if (Platform.OS != "web") {
           await SecureStore.setItemAsync("token", token);
         }
+        setIsLoading(false);
+
         console.log("Login successful, token saved.", response.status);
         router.replace("/home");
         Alert.alert("Logged In Successfully!");
       } catch (error: any) {
+        setIsLoading(false);
         router.replace("/home"); // for now, we will have to remove this
         console.error("Login failed:===============", error.message);
         Alert.alert(error.message);
@@ -136,13 +139,13 @@ const LoginScreen = () => {
         </Text>
       </TouchableOpacity> */}
       <MainButton
-      isLoading={isLoading}
+        isLoading={isLoading}
         title="Login"
         filled
         onPress={loginHandler}
         style={styles.loginButton}
       />
-      <TouchableOpacity onPress={()=>navigate("forgetpasswordOption")}>
+      <TouchableOpacity onPress={() => navigate("forgetpasswordOption")}>
         <Text style={styles.forgotPassword}>Forgot the password?</Text>
       </TouchableOpacity>
 

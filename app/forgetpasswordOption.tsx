@@ -7,13 +7,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/Header";
 import illustrations from "@/constants/illustrations";
 // import { icons } from "@/constants/icons";
-const chat = require("../../assets/icons/chat.png");
-const email = require("../../assets/icons/email.png");
+const chat = require("../assets/icons/chat.png");
+const email = require("../assets/icons/email.png");
 
 import Button from "@/components/Button";
 import { Image } from "expo-image";
 import MainButton from "@/components/MainButton";
-const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
 
 
 const ForgetScreen = () => {
