@@ -16,7 +16,7 @@ const LoginScreen = () => {
         <FontAwesome name="arrow-left" size={24} color="black" />
       </TouchableOpacity>
 
-      <Image source={PlaceholderImage} style={styles.logo} />
+      <Image source={PlaceholderImage} style={styles.logo} resizeMode="contain" />
 
       <Text style={styles.title}>Login to Your Account</Text>
 
@@ -80,7 +80,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 120,
     height: 50,
-    resizeMode: "contain",
     marginBottom: 20,
   },
   title: {
