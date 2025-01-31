@@ -6,9 +6,24 @@ import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/Header";
+import { useNavigation, useRouter } from "expo-router";
+
+
+type RootStackParamList = {
+  RouteName: { card: { id: number } };
+};
+
 const SubscriptionScreen = () => {
+  const navigation = useNavigation();
+  const router = useRouter();
+
   const [selected, setSelected] = useState<string>("free");
   const handleSelect = (pkg: string) => {
+    // navigation.navigate('selectedPackageScreen', initialParams:{ card:{id:12}})
+    router.push({
+      pathname: '/selectedPackageScreen',
+      params: { plan: 1222 }, // Pass plan as a parameter
+  });
     setSelected(pkg);
     Alert.alert(`Subscribed Successfully! ${pkg}`);
   };

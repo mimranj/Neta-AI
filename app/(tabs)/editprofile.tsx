@@ -62,7 +62,6 @@ const ProfileForm: React.FC = () => {
     try {
       // Get the user ID from AsyncStorage
       const response = await apiClient.get("/users/s233sa");
-      console.log("user data: " + JSON.stringify(response.data.data));
 
       if (response.status != 200) {
         throw new Error("User ID not found in AsyncStorage.");
@@ -83,41 +82,13 @@ const ProfileForm: React.FC = () => {
       }, 2000);
     }
   };
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     const getTheme = async () => {
-  //       const userDetails: any = await SecureStore.getItemAsync("user")
-  //       setUserData(JSON.parse(userDetails));
-  //     };
-  //     getTheme();
-  //   }, [])
-  // )
+  
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
     }, [])
   );
-  //   useFocusEffect(
-  //     React.useCallback(() => {
-  //       const fetchUser = async () => {
-  //         const userDetails: any = await SecureStore.getItemAsync("user");
-  //         if (userDetails) {
-  //           const userData = JSON.parse(userDetails);
-  //           let fome = {};
-  //           form.name = userData.name || "nameeeee";
-  //           form.phone = userData.phone_number;
-  //           form.address = userData.address;
-  //           form.company = userData.org_name;
-  //           form.age = userData.age;
-  //           form.image = userData.profile_img;
-  //           setForm({ ...form });
-  //         }
-  //       };
-  //       fetchUser();
-  //       console.log(form);
-  //     }, [])
-  //   );
-  // Form Validation
+ 
   const validateForm = (): boolean => {
     let newErrors: Partial<FormData> = {};
 
@@ -140,7 +111,6 @@ const ProfileForm: React.FC = () => {
 
   // Submit Form
   const handleSubmit = async () => {
-    console.log("form submit");
 
     // Alert.alert('Success', 'Form submitted successfully!');
     // if (!validateForm()) {
@@ -156,7 +126,6 @@ const ProfileForm: React.FC = () => {
     const nickname = "nickname";
     try {
       const img = await blobToBase64(profilePicture);
-      console.log("immmg", img);
 
       const profilePictureBase64 = `data:image/jpeg;base64,${img.img}`;
       const user = {
@@ -171,7 +140,6 @@ const ProfileForm: React.FC = () => {
         },
       };
       const userId = await apiClient.put("/users/profile/uiy9798y8987", user);
-      console.log("edit response", userId);
       if (!userId) {
         throw new Error("User ID not found in AsyncStorage.");
       }
