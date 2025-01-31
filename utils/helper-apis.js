@@ -15,7 +15,7 @@ const createCheckoutSession = async (items) => {
   return sessionId;
 };
 
-const blobToBase64 = async (imgUri) => {
+export const blobToBase64 = async (imgUri) => {
   const res = await fetch(imgUri);
   const blob = await res.blob();
   return new Promise((resolve, reject) => {
@@ -34,6 +34,6 @@ const blobToBase64 = async (imgUri) => {
   });
 };
 
-export { blobToBase64 };
+ 
 
 export default createCheckoutSession;

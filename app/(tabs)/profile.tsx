@@ -3,10 +3,12 @@ import * as SecureStore from "expo-secure-store";
 import { COLORS } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Switch, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import apiClient from '@/utils/axios-services';
+import SettingSkeleton from '@/components/Skeletons/SettingSkeleton';
+ 
 type Nav = {
   navigate: (value: string) => void
 };
@@ -19,19 +21,44 @@ type User = {
 const ProfileScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [userData, setUserData] = useState<User>();
+  const [loading, setLoading] = useState<boolean>(true); // To manage loading state
+
   const { navigate } = useNavigation<Nav>();
   const colors = { background: "white" };
-  useFocusEffect(
-    React.useCallback(() => {
-      const getTheme = async () => {
-        const userDetails: any = await SecureStore.getItemAsync("user")
-        setUserData(JSON.parse(userDetails));
-      };
-      getTheme();
-    }, [])
-  )
 
-  return (
+  const fetchUserData = async () => {
+    try {
+      // Get the user ID from AsyncStorage
+      const response = await apiClient.get('/users/s233sa');
+      console.log('user data: ' + JSON.stringify(response.data.data));
+      
+      if (response.status != 200) {
+        throw new Error('User ID not found in AsyncStorage.');
+      }
+      setUserData({...response.data.data, profile_img:response.data.data.profile.profile_img});
+      
+    } catch (error) {
+      console.error('Error fetching user data: ', error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false); // Set loading state to false when the data fetch is complete
+      }, 2000);
+    }
+  };
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const getTheme = async () => {
+  //       const userDetails: any = await SecureStore.getItemAsync("user")
+  //       setUserData(JSON.parse(userDetails));
+  //     };
+  //     getTheme();
+  //   }, [])
+  // )
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserData();
+  }, []))
+  return loading ? <SettingSkeleton/>: (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <Header title="" />
       <View style={styles.container}>

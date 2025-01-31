@@ -10,7 +10,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, value, onChangeText, pla
         <View style={styles.container}>
             <Text style={styles.label}>{label}</Text>
             <TextInput
-                style={[styles.input, error ? styles.inputError : {}]}
+                style={[styles.input, error ? styles.inputError : {},props.style]}
                 value={value}
                 onChangeText={onChangeText}
                 placeholder={placeholder}

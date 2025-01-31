@@ -1,3 +1,5 @@
+import 'react-native-reanimated'
+import 'react-native-gesture-handler'
 import { COLORS } from "@/constants";
 import { router } from "expo-router";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
