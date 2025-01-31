@@ -1,10 +1,11 @@
+import { COLORS } from '@/constants';
 import React from 'react';
 import { View, Text, TextInput, StyleSheet, TextInputProps } from 'react-native';
 interface InputFieldProps extends TextInputProps {
     label: string;
     error?: string;
 }
-const InputField: React.FC<InputFieldProps> = ({ label, value, onChangeText, placeholder, error, keyboardType }) => {
+const InputField: React.FC<InputFieldProps> = ({ label, value, onChangeText, placeholder, error, keyboardType, ...props }) => {
     return (
         <View style={styles.container}>
             <Text style={styles.label}>{label}</Text>
@@ -14,6 +15,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, value, onChangeText, pla
                 onChangeText={onChangeText}
                 placeholder={placeholder}
                 keyboardType={keyboardType}
+                {...props}
             />
             {error ? <Text style={styles.errorText}>{error}</Text> : null}
         </View>
@@ -28,7 +30,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 14,
         fontWeight: 'bold',
-        color: '#333',
+        color: COLORS.gray2,
         marginBottom: 5,
     },
     input: {

@@ -1,69 +1,101 @@
+import Header from '@/components/Header';
+import * as SecureStore from "expo-secure-store";
+import { COLORS } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from 'expo-router';
+import { router, useFocusEffect, useNavigation } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Switch, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Nav = {
   navigate: (value: string) => void
 };
+type User = {
+  name: string;
+  email: string;
+  org_name: string
+  profile_img: string
+}
 const ProfileScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [userData, setUserData] = useState<User>();
   const { navigate } = useNavigation<Nav>();
+  const colors = { background: "white" };
+  useFocusEffect(
+    React.useCallback(() => {
+      const getTheme = async () => {
+        const userDetails: any = await SecureStore.getItemAsync("user")
+        setUserData(JSON.parse(userDetails));
+      };
+      getTheme();
+    }, [])
+  )
 
   return (
-    <View style={styles.container}>
-      {/* Profile Header */}
-      <View style={styles.header}>
-        <View style={styles.profileContainer}>
-          <Image
-            source={{ uri: 'https://via.placeholder.com/150' }} // Replace with actual image URL
-            style={styles.profileImage}
-          />
-          {/* <TouchableOpacity style={styles.editIcon}>
-            <Text style={styles.editText}>✏️</Text>
-          </TouchableOpacity> */}
-        </View>
-        <Text style={styles.userName}>N/A</Text>
-        <Text style={styles.userEmail}>N / A</Text>
-        <Text style={styles.userStatus}>N/A</Text>
-      </View>
-
-      {/* Menu Items */}
-      <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem} onPress={() => { navigate('editprofile') }}>
-          <Text style={styles.menuText}>
-            <Ionicons name="person-circle-outline" size={16} color="grey" />
-            Edit Profile
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.menuItem} onPress={() => { navigate('subscription') }}>
-          <Text style={styles.menuText}>
-            <Ionicons name="card-outline" size={16} color="grey" />
-            Subscription & Plan
-          </Text>
-          <Text style={styles.menuArrow}>Go ➡</Text>
-        </TouchableOpacity>
-
-        <View style={styles.menuItem}>
-          <Text style={styles.menuText}>
-            <Ionicons name="eye-outline" size={16} color="grey" />
-            Dark Mode
-          </Text>
-          <Switch
-            value={isDarkMode}
-            onValueChange={(value) => setIsDarkMode(value)}
-          />
+    <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+      <Header title="" />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.profileContainer}>
+            <Image
+              source={{ uri: userData?.profile_img }} // Replace with actual image URL
+              style={styles.profileImage}
+            />
+          </View>
+          <Text style={styles.userName}>{userData?.name || 'N/A'}</Text>
+          <Text style={styles.userEmail}>{userData?.email || 'N/A'}</Text>
+          <Text style={styles.userStatus}>{userData?.org_name || 'N/A'}</Text>
         </View>
 
-        <TouchableOpacity style={styles.logoutItem}>
-          <Text style={styles.logoutText}>
-            <Ionicons name="log-out-outline" size={16} color="red" />
-            Logout
-          </Text>
-        </TouchableOpacity>
+        {/* Menu Items */}
+        <View style={styles.menuContainer}>
+          <TouchableOpacity style={styles.menuItem} onPress={() => { navigate('editprofile') }}>
+            <View style={styles.list}>
+              <Ionicons name="person-circle-outline" size={25} color={COLORS.gray2} />
+              <Text style={styles.menuText}>
+                Edit Profile
+              </Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem} onPress={() => { navigate('subscription') }}>
+            <View style={styles.list}>
+              <Ionicons name="card-outline" size={25} color={COLORS.gray2} />
+              <Text style={styles.menuText}>
+                Subscription & Plan
+              </Text>
+            </View>
+            <Text style={styles.menuArrow}>Go ➡</Text>
+          </TouchableOpacity>
+
+          <View style={styles.menuItem}>
+            <View style={styles.list}>
+              <Ionicons name="eye-outline" size={25} color={COLORS.gray2} />
+              <Text style={styles.menuText}>
+                Dark Mode
+              </Text>
+            </View>
+            <Switch
+              value={isDarkMode}
+              onValueChange={(value) => setIsDarkMode(value)}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.logoutItem} onPress={async () => {
+            await SecureStore.deleteItemAsync("token");
+            await SecureStore.deleteItemAsync("user");
+            router.replace("/login")
+          }}>
+            <View style={styles.list}>
+              <Ionicons name="log-out-outline" size={25} color="red" />
+              <Text style={styles.logoutText}>
+                Logout
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -71,6 +103,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  area: {
+    flex: 1,
+    backgroundColor: COLORS.white,
+  },
+  list: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
   },
   header: {
     backgroundColor: '#2196F3', // Blue Background
@@ -82,13 +124,14 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 3,
+    boxShadow: '0px 5px 5px rgba(0, 0, 0, 0.2)',
   },
   profileContainer: {
     position: 'relative',
   },
   profileImage: {
-    width: 80,
-    height: 80,
+    width: 150,
+    height: 150,
     borderRadius: 40,
     borderWidth: 3,
     borderColor: 'white',
@@ -132,10 +175,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   menuText: {
-    fontSize: 18,
+    fontSize: 16,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    color: 'grey',
     gap: 5,
   },
   menuArrow: {

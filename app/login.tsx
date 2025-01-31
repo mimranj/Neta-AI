@@ -25,7 +25,7 @@ const LoginScreen = () => {
     navigate: (value: string) => void;
   };
   const { navigate } = useNavigation<Nav>();
-  const [form, setForm] = useState({ email: "m@gmail.com", password: "1234567" });
+  const [form, setForm] = useState({ email: "super-admin@gmail.com", password: "admin123" });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<any>>({});
   const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -82,7 +82,7 @@ const LoginScreen = () => {
         }
         setIsLoading(false);
 
-        console.log("Login successful, token saved.", response.status);
+        console.log("Login successful, token saved.", response.data);
         router.replace("/home");
         Alert.alert("Logged In Successfully!");
       } catch (error: any) {
@@ -96,10 +96,6 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
-        <FontAwesome name="arrow-left" size={24} color="black" />
-      </TouchableOpacity>
-
       <Image
         source={PlaceholderImage}
         style={styles.logo}
@@ -122,6 +118,7 @@ const LoginScreen = () => {
         <InputField
           label="Password"
           value={form.password}
+          secureTextEntry={true}
           onChangeText={(text) => inputChangedHandler(text, "password")}
           placeholder="Enter password"
           error={errors?.password}

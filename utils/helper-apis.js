@@ -18,8 +18,6 @@ const createCheckoutSession = async (items) => {
 const blobToBase64 = async (imgUri) => {
   const res = await fetch(imgUri);
   const blob = await res.blob();
-  console.log(blob);
-  
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 

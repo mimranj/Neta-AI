@@ -62,8 +62,8 @@ if (!form.password.trim()) {
     if (!form.phone_number.trim()) {
       newErrors.phone_number = "Password can't be blank.";
     } 
-  if (form.phone_number.length<7||form.phone_number.length>7) {
-    newErrors.phone_number =form.phone_number.length<7 ?"Phone number can not be less than 7 digits!":"Phone number can not be more than 7 digits!";
+  if (form.phone_number.length<7) {
+    newErrors.phone_number =form.phone_number.length<7 ?"Phone number could not be less than 7 digits!":"Phone number could not be more than 7 digits!";
   }
 
 
@@ -100,8 +100,6 @@ if (!form.password.trim()) {
           terms_accepted: isChecked,
         };
         const response = await apiClient.post("/auth/register", user);
-        console.log(response);
-        
         if (response.status !== 201) {
           throw new Error("Account creation failed!");
         }
@@ -175,6 +173,7 @@ if (!form.password.trim()) {
             onChangeText={(text) => inputChangedHandler(text, "password")}
             placeholder="Enter password"
             error={errors?.password}
+            secureTextEntry
           />
           <View style={styles.checkBoxContainer}>
             <View style={{ flexDirection: "row" }}>

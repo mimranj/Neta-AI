@@ -1,69 +1,93 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, FlatList, Alert } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Dropdown from '@/components/Dropdown';
-import { useNavigation } from 'expo-router';
+import { useFocusEffect, useNavigation } from 'expo-router';
 import MainButton from '@/components/MainButton';
-import { SIZES } from '@/constants';
+import { COLORS, SIZES } from '@/constants';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import apiClient from '@/utils/axios-services';
 
 type Nav = {
     navigate: (value: string) => void
 };
 const HomeScreen = () => {
+    const [loading, setLoading] = useState(true);
     const { navigate } = useNavigation<Nav>();
+    const colors = { background: "white" };
+    const fetchUserData = async () => {
+        try {
+            const response = await apiClient.get('/users/profile/678b72732af391fdb2d2995b');
+            if (response.status != 200) {
+                throw new Error('User not found.');
+            }
+            await SecureStore.setItemAsync('user', JSON.stringify(response.data.data));
+        } catch (error:any) {
+            console.error('Error fetching user data: ', error.response.data);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useFocusEffect(
+        React.useCallback(() => {
+            fetchUserData();
+        }, [])
+    )
 
-   
 
     return (
-        <View style={styles.container}>
-            {/* Header */}
-            <View style={styles.header}>
-                {/* <TouchableOpacity onPress={() => navigate.}>
+        <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+            <View style={styles.container}>
+                {/* Header */}
+                <View style={styles.header}>
+                    {/* <TouchableOpacity onPress={() => navigate.}>
                     <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity> */}
-                <Text style={styles.title}>Neta</Text>
-                <TouchableOpacity onPress={() => navigate('profile')}>
-                    <Ionicons name="settings-outline" size={24} color="black" />
-                </TouchableOpacity>
+                    <Text style={styles.title}>Neta</Text>
+                    <TouchableOpacity onPress={() => navigate('profile')}>
+                        <Ionicons name="settings-outline" size={24} color="black" />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.centered}>
+                    <Text style={styles.welcomeText}>Welcome to {'\n'} <Text style={styles.highlight}>Neta-Ai</Text></Text>
+
+                    <MainButton
+                        title="Start Chat with Electrical Assistant"
+                        filled
+                        onPress={() => navigate('electricalAssitant')}
+                        style={styles.button}
+                    />
+                    <MainButton
+                        title="Start Chat with Estimate Assistant"
+                        filled
+                        onPress={() => navigate('estimateAssitant')}
+                        style={styles.button}
+                    />
+                </View>
+
             </View>
-            <View style={styles.centered}>
-
-            <Text style={styles.welcomeText}>Welcome to {'\n'} <Text style={styles.highlight}>Neta-Ai</Text></Text>
-
-            <MainButton
-              title="Start Chat with Electrical Assistant"
-              filled
-              onPress={()=>navigate('electricalAssitant')}
-              style={styles.button}
-            />
-            <MainButton
-              title="Start Chat with Estimate Assistant"
-              filled
-              onPress={()=>navigate('estimateAssitant')}
-              style={styles.button}
-            />
-            </View>
-
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
-    centered:{
-flex:1,
-justifyContent:"center",
-alignItems:"center"
+    centered: {
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    area: {
+        flex: 1,
+        backgroundColor: COLORS.white,
     },
     button: {
         marginVertical: 6,
         width: SIZES.width - 32,
         borderRadius: 30,
-      },
+    },
     container: {
         flex: 1,
         backgroundColor: '#F5F5F5',
-        // paddingHorizontal: 20,
-        paddingTop: 20,
+        // paddingTop: 20,
     },
     header: {
         flexDirection: 'row',
@@ -93,7 +117,7 @@ alignItems:"center"
         color: '#1EADFF',
     },
     highlight: {
-        textAlign:"center",
+        textAlign: "center",
         fontSize: 30,
         fontWeight: 'bold',
     },

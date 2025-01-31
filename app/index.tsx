@@ -1,118 +1,105 @@
-import { View, StyleSheet, Text } from 'react-native';
-import { useState } from 'react';
-import ImageViewer from '@/components/ImageViewer';
-import PrimaryButton from '@/components/PrimaryButton';
-import { COLORS, FONTS, SIZES } from '@/constants';
-import { useNavigation } from 'expo-router';
-const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
+import { COLORS } from "@/constants";
+import { router } from "expo-router";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+export default function Index() {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>NETA AI - Your AI-Powered Electrical Assistant</Text>
+      <Text style={styles.subtitle}>Revolutionizing electrical work with advanced AI</Text>
+
+      {/* NEC Electrical Code Expert */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>NEC Electrical Code Expert</Text>
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletText}>✓ Real-time code compliance checks</Text>
+        </View>
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletText}>✓ Instant NEC reference lookups</Text>
+        </View>
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletText}>✓ Document & image analysis</Text>
+        </View>
+      </View>
+
+      {/* Electrical Work Proposal Assistant */}
+      <View style={styles.card}>
+        <Text style={styles.cardTitle}>Electrical Work Proposal Assistant</Text>
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletText}>✓ Automated cost estimation</Text>
+        </View>
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletText}>✓ Material & labor calculations</Text>
+        </View>
+        <View style={styles.bulletItem}>
+          <Text style={styles.bulletText}>✓ Branded PDF proposal generation</Text>
+        </View>
+      </View>
+
+      {/* Get Started Button */}
+      <TouchableOpacity style={styles.button}onPress={() => router.replace("/login")}>
+        <Text style={styles.buttonText}>Get Started</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
-    alignItems: 'center',
-  },
-  imageContainer: {
-    flex: 1,
-  },
-  footerContainer: {
-    flex: 1 / 3,
-    alignItems: 'center',
-  },
-  optionsContainer: {
-    position: 'absolute',
-    bottom: 80,
-  },
-  optionsRow: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  dotsContainer: {
-    marginBottom: 20,
-    marginTop: 8,
-  },
-  buttonContainer: {
-    position: 'absolute',
-    bottom: 0,
-    padding: 22,
-    borderTopLeftRadius: SIZES.radius,
-    borderTopRightRadius: SIZES.radius,
-    height: 360,
-  },
-  titleContainer: {
-    marginVertical: 18,
-    alignItems: 'center',
+    backgroundColor: "#F8F9FA",
+    alignItems: "center",
+    padding: 20,
   },
   title: {
-    ...FONTS.h3,
-    color: COLORS.white,
-    textAlign: "center",
-  },
-  subTitle: {
-    ...FONTS.h3,
+    fontSize: 22,
+    fontWeight: "bold",
     color: COLORS.primary,
     textAlign: "center",
-    marginTop: 8,
+    marginBottom: 5,
   },
-  description: {
-    ...FONTS.body3,
-    color: COLORS.white,
-    textAlign: 'center',
-    marginBottom: 16
+  subtitle: {
+    fontSize: 14,
+    color: "#333",
+    textAlign: "center",
+    marginBottom: 20,
   },
-  nextButton: {
-    width: SIZES.width - 44,
-    marginBottom: SIZES.padding,
+  card: {
+    backgroundColor: "#fff",
+    width: "100%",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 3 },
+    shadowRadius: 5,
+    elevation: 3,
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.primary,
+    marginBottom: 8,
+  },
+  bulletItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 5,
+  },
+  bulletText: {
+    fontSize: 14,
+    color: "#444",
+  },
+  button: {
     backgroundColor: COLORS.primary,
-    borderColor: COLORS.primary,
-    marginTop: 22
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+    marginTop: 10,
   },
-  skipButton: {
-    width: SIZES.width - 44,
-    marginBottom: SIZES.padding,
-    backgroundColor: 'transparent',
-    borderColor: COLORS.primary
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
-
-type Nav = {
-  navigate: (value: string) => void
-}
-export default function Index() {
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
-  const { navigate } = useNavigation<Nav>();
-  return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <ImageViewer imgSource={PlaceholderImage} selectedImage={selectedImage} />
-      </View>
-      <View style={styles.buttonContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Welcome to</Text>
-          <Text style={styles.subTitle}>Neta App</Text>
-        </View>
-
-        <Text style={styles.description}>
-          Welcome to Neta, a great friend to chat with you
-        </Text>
-
-        {/* <View style={styles.dotsContainer}>
-          {progress < 1 && <DotsView progress={progress} numDots={4} />}
-        </View> */}
-
-        <PrimaryButton
-          title="Next"
-          filled
-          onPress={() => navigate('onboarding2')}
-          style={styles.nextButton}
-        />
-        <PrimaryButton
-          title="Skip"
-          onPress={() => navigate('login')}
-          textColor={COLORS.primary}
-          style={styles.skipButton}
-        />
-      </View>
-    </View>
-  );
-}
