@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect, useNavigation } from 'expo-router';
+import { useFocusEffect, useNavigation, router } from 'expo-router';
 import MainButton from '@/components/MainButton';
 import { COLORS, SIZES } from '@/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -22,7 +22,7 @@ const HomeScreen = () => {
                 throw new Error('User not found.');
             }
             await SecureStore.setItemAsync('user', JSON.stringify(response.data.data));
-        } catch (error:any) {
+        } catch (error: any) {
             console.error('Error fetching user data: ', error.response.data);
         } finally {
             setLoading(false);
@@ -54,13 +54,23 @@ const HomeScreen = () => {
                     <MainButton
                         title="Start Chat with Electrical Assistant"
                         filled
-                        onPress={() => navigate('electricalAssitant')}
+                        onPress={() => {
+                            router.push({
+                                pathname: '/electricalAssitant',
+                                params: { title: JSON.stringify({ page_title: "Electrical Assistant" }) }, // Pass title as a parameter
+                            });
+                        }}
                         style={styles.button}
                     />
                     <MainButton
                         title="Start Chat with Estimate Assistant"
                         filled
-                        onPress={() => navigate('estimateAssitant')}
+                        onPress={() => {
+                            router.push({
+                                pathname: '/electricalAssitant',
+                                params: { title: JSON.stringify({ page_title: "Estimate Assistant" }) }, // Pass plan as a parameter
+                            });
+                        }}
                         style={styles.button}
                     />
                 </View>

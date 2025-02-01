@@ -1,70 +1,89 @@
 import SubscriptionCard from "@/components/SubscriptionCard";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "@/components/Header";
 import { useNavigation, useRouter } from "expo-router";
+import apiClient from "@/utils/axios-services";
 
-
+const plans = [
+  {
+    title: "Free Tier",
+    description: ["Limited NEC code lookups", "Basic cost estimation"],
+    price: "Free",
+    icon: <Ionicons name="lock-open" size={24} color="gold" />
+  },
+  {
+    title: "Basic Paid Tier",
+    description: ["Enhanced lookups", "Detailed breakdowns", "Document analysis"],
+    price: "$9.99/month",
+    amount: 999, // Amount in cents
+    icon: <Ionicons name="document-text" size={24} color="white" />
+  },
+  {
+    title: "Premium Paid Tier",
+    description: ["Full access to all features", "Advanced analysis", "Branded proposal customization"],
+    price: "$19.99/month",
+    amount: 1999, // Amount in cents
+    icon: <Ionicons name="star" size={24} color="orange" />
+  },
+];
 type RootStackParamList = {
   RouteName: { card: { id: number } };
 };
 
 const SubscriptionScreen = () => {
-  const navigation = useNavigation();
   const router = useRouter();
-
-  const [selected, setSelected] = useState<string>("free");
-  const handleSelect = (pkg: string) => {
-    // navigation.navigate('selectedPackageScreen', initialParams:{ card:{id:12}})
-    router.push({
-      pathname: '/selectedPackageScreen',
-      params: { plan: 1222 }, // Pass plan as a parameter
-  });
-    setSelected(pkg);
-    Alert.alert(`Subscribed Successfully! ${pkg}`);
-  };
+  const [selected, setSelected] = useState<string>("Free Tier");
+  const [activePlan, setActivePlan] = useState("Free Tier");
+  useEffect(() => {
+    const fetchPlanData = async () => {
+      try {
+        const response = await apiClient.get('stripe/subscription');
+        if (response.status !== 200) {
+          Alert.alert('Error', response.data.message);
+          return
+        }
+        response.data.data.subscription.map((plan: any) => {
+          if (plan.status === "active") {
+            setSelected(plan.name);
+            setActivePlan(plan)
+          }
+        })
+      } catch (error: any) {
+        console.error('Error fetching plan data:', error.response.data);
+      }
+    }
+    fetchPlanData();
+  }, []);
   const colors = { background: "white" }
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <Header title="profile" />
       <View style={styles.subscriptionContainer}>
         <Text style={styles.subscriptionTitle}>Choose Your Subscription</Text>
-        <TouchableOpacity
-          onPress={() => handleSelect("free")} style={[styles.card, selected === "free" && styles.selectedCard]}>
-          <Ionicons name="lock-open" size={24} color="gold" />
-          <Text style={styles.cardTitle}>Free Tier</Text>
-          <Text style={styles.cardDescription}>
-            Limited NEC code lookups and cost estimation.
-          </Text>
-          <Text style={styles.cardPrice}>Free</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleSelect("basicPaid")}
-          style={[styles.card, selected === "basicPaid" && styles.selectedCard]}
-        >
-          <Ionicons name="document-text" size={24} color="white" />
-          <Text style={styles.cardTitle}>Basic Paid Tier</Text>
-          <Text style={styles.cardDescription}>
-            Enhanced lookups, detailed breakdowns, and document analysis.
-          </Text>
-          <Text style={styles.cardPrice}>$9.99/month</Text>
-          <Text style={styles.cardSelected}>Selected</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleSelect("premium")} style={[styles.card, selected === "premium" && styles.selectedCard]}>
-          <Ionicons name="star" size={24} color="orange" />
-          <Text style={styles.cardTitle}>Premium Paid Tier</Text>
-          <Text style={styles.cardDescription}>
-            Full access to all features, advanced analysis, and branded proposal
-            customization
-          </Text>
-          <Text style={styles.cardPrice}>$19.99/month</Text>
-          <Text style={styles.cardSelected}>Premium</Text>
-        </TouchableOpacity>
+        {
+          plans.map((plan, index) => (
+            <TouchableOpacity
+              onPress={() => {
+                router.push({
+                  pathname: '/selectedPackageScreen',
+                  params: { plan: JSON.stringify(plan) }, // Pass plan as a parameter
+                });
+              }}
+              style={[styles.card, selected === plan.title && styles.selectedCard]}>
+              {plan.icon}
+              <Text style={styles.cardTitle}>{plan.title}</Text>
+              <Text style={styles.cardDescription}>
+                {plan.description.join(", ")}
+              </Text>
+              <Text style={styles.cardPrice}>{plan.price}</Text>
+            </TouchableOpacity>
+          ))
+        }
       </View>
     </SafeAreaView>
   );
@@ -112,7 +131,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   selectedCard: {
-    borderWidth: 2,
+    borderWidth: 4,
     borderColor: "white",
   },
   cardSelected: {

@@ -8,15 +8,17 @@ import { View, Text, TouchableOpacity, Image, Switch, StyleSheet } from 'react-n
 import { SafeAreaView } from 'react-native-safe-area-context';
 import apiClient from '@/utils/axios-services';
 import SettingSkeleton from '@/components/Skeletons/SettingSkeleton';
- 
+
 type Nav = {
   navigate: (value: string) => void
 };
 type User = {
-  name: string;
-  email: string;
-  org_name: string
-  profile_img: string
+  data: {
+    name: string;
+    email: string;
+    org_name: string
+    profile_img: string
+  }
 }
 const ProfileScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -30,12 +32,11 @@ const ProfileScreen = () => {
     try {
       // Get the user ID from AsyncStorage
       const response = await apiClient.get('/users/s233sa');
-      
       if (response.status != 200) {
         throw new Error('User ID not found in AsyncStorage.');
       }
-      setUserData({...response.data.data, profile_img:response.data.data.profile.profile_img});
-      
+      setUserData(response.data);
+
     } catch (error) {
       console.error('Error fetching user data: ', error);
     } finally {
@@ -56,21 +57,21 @@ const ProfileScreen = () => {
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
-  }, []))
-  return loading ? <SettingSkeleton/>: (
+    }, []))
+  return loading ? <SettingSkeleton /> : (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <Header title="" />
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.profileContainer}>
             <Image
-              source={{ uri: userData?.profile_img }} // Replace with actual image URL
+              source={{ uri: userData?.data.profile_img }} // Replace with actual image URL
               style={styles.profileImage}
             />
           </View>
-          <Text style={styles.userName}>{userData?.name || 'N/A'}</Text>
-          <Text style={styles.userEmail}>{userData?.email || 'N/A'}</Text>
-          <Text style={styles.userStatus}>{userData?.org_name || 'N/A'}</Text>
+          <Text style={styles.userName}>{userData?.data.name || 'N/A'}</Text>
+          <Text style={styles.userEmail}>{userData?.data.email || 'N/A'}</Text>
+          <Text style={styles.userStatus}>{userData?.data.org_name || 'N/A'}</Text>
         </View>
 
         {/* Menu Items */}
@@ -84,7 +85,9 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={() => { navigate('subscription') }}>
+          <TouchableOpacity style={styles.menuItem}
+            onPress={() => { navigate('subscription') }}
+          >
             <View style={styles.list}>
               <Ionicons name="card-outline" size={25} color={COLORS.gray2} />
               <Text style={styles.menuText}>

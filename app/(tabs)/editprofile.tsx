@@ -70,9 +70,9 @@ const ProfileForm: React.FC = () => {
         name: response.data.data.name,
         phone: response.data.data.phone_number,
         email: response.data.data.email,
-        address: response.data.data.profile.address,
-        company: response.data.data.profile.org_name,
-        image: response.data.data.profile.profile_img,
+        address: response.data.data.address,
+        company: response.data.data.org_name,
+        image: response.data.data.profile_img,
       });
     } catch (error) {
       console.error("Error fetching user data: ", error);
