@@ -25,7 +25,7 @@ const LoginScreen = () => {
     navigate: (value: string) => void;
   };
   const { navigate } = useNavigation<Nav>();
-  const [form, setForm] = useState({ email: "super-admin@gmail.com", password: "admin123" });
+  const [form, setForm] = useState({ email: "neta-admin1@gmail.com", password: "admin123" });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<any>>({});
   const [isChecked, setIsChecked] = useState<boolean>(false);

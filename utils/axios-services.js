@@ -2,7 +2,7 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const BASE_URL = 'https://neta-dev-xi.vercel.app/api/';
-// const BASE_URL = 'http://192.168.1.105:3000/api/';
+// const BASE_URL = 'http://192.168.56.1:3000/api/';
 const apiClient = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
