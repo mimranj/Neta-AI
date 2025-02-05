@@ -13,7 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import axios from "axios";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import * as DocumentPicker from "expo-document-picker";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -79,7 +79,7 @@ const ElectricalAssistantScreen: React.FC = () => {
     const formData = new FormData();
     formData.append("file", { uri: file.uri, name: file.name, type: file.mimeType } as any);
 
-    setMessages([...messages, { id: String(messages.length + 1), text: "File uploading...", sender: 'user' }]);
+    setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploading..." }, sender: 'user' }]);
 
     try {
       const response = await fetch("https://ai.innovativetech.dev/upload", {
@@ -89,9 +89,11 @@ const ElectricalAssistantScreen: React.FC = () => {
       });
 
       if (!response.ok) throw new Error("Upload failed");
-      setMessages([...messages, { id: String(messages.length + 1), text: "File uploaded successfully", sender: 'user' }]);
-      const data: { message: string } = await response.json();
-      setMessages((prev) => [...prev, { id: String(prev.length + 1), text: data.message || "PDF uploaded successfully", sender: "ai" }]);
+      setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploaded successfully" }, sender: 'user' }]);
+      const data: { response: string } = await response.json();
+      console.log(data, "dddddddddddddddddddddd");
+
+      setMessages((prev) => [...prev, { id: String(prev.length + 1), text: { response: data.response || "PDF uploaded successfully" }, sender: "ai" }]);
     } catch (error) {
       Alert.alert("Error", "Failed to upload file. Please try again.");
     }
@@ -101,9 +103,12 @@ const ElectricalAssistantScreen: React.FC = () => {
   const storeChatHistory = async (messagesArray: Message[]) => {
     // if (messages.length === 0) return; // Don't send empty chats
     try {
+      console.log("Saving chat history:", messagesArray);
+
       await apiClient.put("users/chats", {
         chat: messagesArray,
       });
+      Alert.alert("Success", "Chat history saved successfully");
     } catch (error: any) {
       console.log("Failed to save chat history:", error.response.data);
     }
@@ -124,14 +129,14 @@ const ElectricalAssistantScreen: React.FC = () => {
       <View style={styles.mainContainer}>
         <View style={styles.topbar}>
           <Ionicons
-            name="arrow-back-circle-outline"
+            name="settings-outline"
             size={24}
             color="white"
             style={styles.icon}
-            onPress={navigation.goBack}
+            onPress={()=> router.navigate("/profile")}
           />
           <Text style={styles.title}>{pageTitle?.page_title}</Text>
-          <Ionicons name="time-outline" size={24} color="white" style={styles.icon} />
+          <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={()=>router.navigate("/chats")} />
         </View>
 
         <FlatList
@@ -144,26 +149,36 @@ const ElectricalAssistantScreen: React.FC = () => {
                 {/* {item.text.response} */}
                 <Markdown
                   markdownit={
-                    MarkdownIt({ typographer: true }).disable(['link'])
+                    MarkdownIt({ typographer: true })
                   }
-                >{item.text.response}</Markdown>
-                {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
-                  return (
-                    <TouchableOpacity key={index} onPress={() => Linking.openURL(link.link_url)}>
-                      <Text style={{ color: "blue" }}>{link.link_name}</Text>
-                    </TouchableOpacity>
-                  )
-                })}
+                >
+                  {item.text.response}
+                </Markdown>
               </Text>
-              <View style={{marginTop: 30}}>
+                {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
+                  // Improved regex to handle various `<a>` formats
+                  const match = link.match(/<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/is);
+
+                  if (!match) return null; // Skip if format is incorrect
+
+                  const [, url, linkText] = match; // Extract URL and text
+
+                  return (
+                    <TouchableOpacity key={index} onPress={() => Linking.openURL(url)}>
+                      <Text style={{ color: "blue", textDecorationLine: "underline" }}>{linkText.trim()}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              {item.text.retrieved_images && item.text.retrieved_images.length > 0 && <View style={{ marginTop: 30 }}>
                 {
-                  item.text.retrieved_images && item.text.retrieved_images.map((img: any, index: number) => {
+                  item.text.retrieved_images.map((img: any, index: number) => {
                     return (
                       <Image source={{ uri: img.image_url }} alt={img.image_name} style={{ width: 280, height: 280 }} key={index} />
                     )
                   })
                 }
               </View>
+              }
             </View>
           )}
           contentContainerStyle={styles.messageContainer}

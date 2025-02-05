@@ -51,7 +51,7 @@ const HomeScreen = () => {
                 <View style={styles.centered}>
                     <Text style={styles.welcomeText}>Welcome to {'\n'} <Text style={styles.highlight}>Neta-Ai</Text></Text>
 
-                    <MainButton
+                    {/* <MainButton
                         title="Start Chat with Electrical Assistant"
                         filled
                         onPress={() => {
@@ -61,7 +61,7 @@ const HomeScreen = () => {
                             });
                         }}
                         style={styles.button}
-                    />
+                    /> */}
                     <MainButton
                         title="Start Chat with Estimate Assistant"
                         filled
@@ -72,6 +72,14 @@ const HomeScreen = () => {
                             });
                         }}
                         style={styles.button}
+                    />
+                    <MainButton
+                        title="Previous Chats"
+                        filled
+                        onPress={() => {
+                            navigate('chats');
+                        }}
+                        style={styles.hButton}
                     />
                 </View>
 
@@ -93,6 +101,12 @@ const styles = StyleSheet.create({
         marginVertical: 6,
         width: SIZES.width - 32,
         borderRadius: 30,
+    },
+    hButton: {
+        marginVertical: 6,
+        width: SIZES.width - 32,
+        borderRadius: 30,
+        backgroundColor: COLORS.gray2
     },
     container: {
         flex: 1,

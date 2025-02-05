@@ -42,7 +42,7 @@ const ProfileScreen = () => {
     } finally {
       setTimeout(() => {
         setLoading(false); // Set loading state to false when the data fetch is complete
-      }, 2000);
+      }, 1000);
     }
   };
   // useFocusEffect(

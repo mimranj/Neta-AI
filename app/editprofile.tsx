@@ -18,7 +18,7 @@ import { COLORS } from "@/constants";
 import { useFocusEffect, useNavigation } from "expo-router";
 import apiClient from "@/utils/axios-services";
 import { NavigationProp } from "@react-navigation/native";
-import { blobToBase64 } from "../../utils/helper-apis";
+import { blobToBase64 } from "../utils/helper-apis";
 import MainButton from "@/components/MainButton";
 import ProfileSkeleton from "@/components/Skeletons/ProfileSkeleton";
 

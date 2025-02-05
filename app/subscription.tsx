@@ -41,12 +41,16 @@ const SubscriptionScreen = () => {
   const [activePlan, setActivePlan] = useState("Free Tier");
   useEffect(() => {
     const fetchPlanData = async () => {
+      console.log("========================================");
+      
       try {
         const response = await apiClient.get('stripe/subscription');
         if (response.status !== 200) {
           Alert.alert('Error', response.data.message);
           return
         }
+        console.log(response.data.data.subscription);
+        
         response.data.data.subscription.map((plan: any) => {
           if (plan.status === "active") {
             setSelected(plan.name);
@@ -68,6 +72,7 @@ const SubscriptionScreen = () => {
         {
           plans.map((plan, index) => (
             <TouchableOpacity
+            key={index}
               onPress={() => {
                 router.push({
                   pathname: '/selectedPackageScreen',
