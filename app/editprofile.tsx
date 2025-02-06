@@ -29,6 +29,9 @@ interface FormData {
   company: string;
   email: string;
   image: string | null;
+  number_of_electricians:any,
+  where_to_get_esupplies:string,
+  website:string
 }
 
 const ProfileForm: React.FC = () => {
@@ -39,6 +42,9 @@ const ProfileForm: React.FC = () => {
     company: "",
     image: null,
     email: "",
+    number_of_electricians:0,
+    where_to_get_esupplies:"",
+    website:""
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -61,7 +67,10 @@ const ProfileForm: React.FC = () => {
   const fetchUserData = async () => {
     try {
       // Get the user ID from AsyncStorage
-      const response = await apiClient.get("/users/s233sa");
+      const response = await apiClient.get("/users/profile/s233sa");
+console.log('response of profile: ' , response.data
+  
+);
 
       if (response.status != 200) {
         throw new Error("User ID not found in AsyncStorage.");
@@ -73,6 +82,9 @@ const ProfileForm: React.FC = () => {
         address: response.data.data.address,
         company: response.data.data.org_name,
         image: response.data.data.profile_img,
+        number_of_electricians:  `${response.data.data.number_of_electricians}`,
+        where_to_get_esupplies:response.data.data.where_to_get_esupplies,
+        website:response.data.data.website
       });
     } catch (error) {
       console.error("Error fetching user data: ", error);
@@ -121,6 +133,10 @@ const ProfileForm: React.FC = () => {
       address,
       company: companyName,
       image: profilePicture,
+      number_of_electricians,
+      where_to_get_esupplies,
+      website
+
     } = form;
     const password = "111";
     const nickname = "nickname";
@@ -138,6 +154,11 @@ const ProfileForm: React.FC = () => {
           name: img.name,
           type: img.type,
         },
+        
+        number_of_electricians:   parseInt(number_of_electricians),
+        where_to_get_esupplies: where_to_get_esupplies,
+        website: website
+
       };
       const userId = await apiClient.put("/users/profile/uiy9798y8987", user);
       if (!userId) {
@@ -145,8 +166,8 @@ const ProfileForm: React.FC = () => {
       }
       Alert.alert("Success", "Profile updated successfully!");
       navigation.goBack();
-    } catch (error) {
-      console.error("Error updating profile: ", error);
+    } catch (error:any) {
+      console.error("Error updating profile: ", error.response.data);
       Alert.alert("Error", "There was an issue updating the profile.");
     } finally {
       setEditLoading(false);
@@ -224,6 +245,29 @@ const ProfileForm: React.FC = () => {
             placeholder="Enter email"
             error={errors.email}
             keyboardType="numeric"
+          />
+          <InputField
+            label="Website"
+            value={form.website}
+            onChangeText={(text) => setForm({ ...form, website: text })}
+            placeholder="Enter Website"
+            error={errors.website}
+   
+          />
+          <InputField
+            label="Where to get esupplies"
+            value={form.where_to_get_esupplies}
+            onChangeText={(text) => setForm({ ...form, where_to_get_esupplies: text })}
+            placeholder="Enter here..."
+            error={errors.where_to_get_esupplies}
+          />
+          <InputField
+            label="Number of Eletricians"
+            value={form.number_of_electricians}
+            onChangeText={(text) => setForm({ ...form, number_of_electricians: text })}
+            placeholder="Enter number Eletricians"
+            error={errors.number_of_electricians}
+            
           />
 
           {/* Submit Button */}
