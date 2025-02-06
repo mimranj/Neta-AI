@@ -135,10 +135,10 @@ const ElectricalAssistantScreen: React.FC = () => {
             size={24}
             color="white"
             style={styles.icon}
-            onPress={()=> router.navigate("/profile")}
+            onPress={() => router.navigate("/profile")}
           />
           <Text style={styles.title}>{pageTitle?.page_title}</Text>
-          <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={()=>router.navigate("/chats")} />
+          <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={() => router.navigate("/chats")} />
         </View>
 
         <FlatList
@@ -157,25 +157,31 @@ const ElectricalAssistantScreen: React.FC = () => {
                   {item.text.response}
                 </Markdown>
               </Text>
-                {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
-                  // Improved regex to handle various `<a>` formats
-                  const match = link.match(/<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/is);
+              {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
+                // Improved regex to handle various `<a>` formats
+                const match = link.match(/<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/is);
 
-                  if (!match) return null; // Skip if format is incorrect
+                if (!match) return null; // Skip if format is incorrect
 
-                  const [, url, linkText] = match; // Extract URL and text
+                const [, url, linkText] = match; // Extract URL and text
 
-                  return (
-                    <TouchableOpacity key={index} onPress={() => Linking.openURL(url)}>
-                      <Text style={{ color: "blue", textDecorationLine: "underline" }}>{linkText.trim()}</Text>
-                    </TouchableOpacity>
-                  );
-                })}
+                return (
+                  <TouchableOpacity key={index} onPress={() => Linking.openURL(url)}>
+                    <Text style={{ color: "blue", textDecorationLine: "underline" }}>{linkText.trim()}</Text>
+                  </TouchableOpacity>
+                );
+              })}
               {item.text.retrieved_images && item.text.retrieved_images.length > 0 && <View style={{ marginTop: 30 }}>
                 {
                   item.text.retrieved_images.map((img: any, index: number) => {
                     return (
-                      <Image source={{ uri: img.image_url }} alt={img.image_name} style={{ width: 280, height: 280 }} key={index} />
+                      <Image
+                        source={{ uri: img.image_url }}
+                        resizeMode="contain"
+                        alt={img.image_name}
+                        style={{ width: "auto", height: 200}}
+                        key={index}
+                      />
                     )
                   })
                 }
