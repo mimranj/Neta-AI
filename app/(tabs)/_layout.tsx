@@ -31,10 +31,10 @@ export default function TabLayout() {
                 }}
             />
             <Stack>
-                <Stack.Screen name="home" />
+                {/* <Stack.Screen name="home" />
                 <Stack.Screen name="profile" />
-                <Stack.Screen name="editprofile" />
-                <Stack.Screen name="subscription" />
+                <Stack.Screen name="editprofile" /> */}
+                
 
             </Stack>
         </Tabs>

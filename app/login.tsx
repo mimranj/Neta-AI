@@ -17,6 +17,7 @@ import apiClient from "@/utils/axios-services";
 import MainButton from "@/components/MainButton";
 import CustomCheckbox from "@/components/CustomCheckBox";
 import { useRouter } from "expo-router";
+import { images } from "@/constants";
 
 const PlaceholderImage = require("@/assets/images/adaptive-icon copy.png");
 
@@ -25,7 +26,7 @@ const LoginScreen = () => {
     navigate: (value: string) => void;
   };
   const { navigate } = useNavigation<Nav>();
-  const [form, setForm] = useState({ email: "super-admin@gmail.com", password: "admin123" });
+  const [form, setForm] = useState({ email: "neta-admin1@gmail.com", password: "admin123" });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<any>>({});
   const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -97,7 +98,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={PlaceholderImage}
+        source={images.logo}
         style={styles.logo}
         resizeMode="contain"
       />
@@ -149,7 +150,7 @@ const LoginScreen = () => {
         <Text style={styles.forgotPassword}>Forgot the password?</Text>
       </TouchableOpacity>
 
-      <Text style={styles.orText}>or continue with</Text>
+      {/* <Text style={styles.orText}>or continue with</Text>
 
       <View style={styles.socialContainer}>
         <TouchableOpacity style={styles.socialButton}>
@@ -161,7 +162,7 @@ const LoginScreen = () => {
         <TouchableOpacity style={styles.socialButton}>
           <FontAwesome name="google" size={24} color="red" />
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       <TouchableOpacity onPress={() => navigate("signup")}>
         <Text style={styles.signupText}>

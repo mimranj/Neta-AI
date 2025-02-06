@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
-const chat = require("../../assets/icons/chat.png");
+const chat = require("../assets/icons/chat.png");
 // const email = require("../assets/icons/email.png");
 const EstimateAssitantScreen = () => {
     const [message, setMessage] = useState("");

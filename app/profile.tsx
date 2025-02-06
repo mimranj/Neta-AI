@@ -3,48 +3,75 @@ import * as SecureStore from "expo-secure-store";
 import { COLORS } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, Switch, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import apiClient from '@/utils/axios-services';
+import SettingSkeleton from '@/components/Skeletons/SettingSkeleton';
 
 type Nav = {
   navigate: (value: string) => void
 };
 type User = {
-  name: string;
-  email: string;
-  org_name: string
-  profile_img: string
+  data: {
+    name: string;
+    email: string;
+    org_name: string
+    profile_img: string
+  }
 }
 const ProfileScreen = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [userData, setUserData] = useState<User>();
+  const [loading, setLoading] = useState<boolean>(true); // To manage loading state
+
   const { navigate } = useNavigation<Nav>();
   const colors = { background: "white" };
-  useFocusEffect(
-    React.useCallback(() => {
-      const getTheme = async () => {
-        const userDetails: any = await SecureStore.getItemAsync("user")
-        setUserData(JSON.parse(userDetails));
-      };
-      getTheme();
-    }, [])
-  )
 
-  return (
+  const fetchUserData = async () => {
+    try {
+      // Get the user ID from AsyncStorage
+      const response = await apiClient.get('/users/s233sa');
+      if (response.status != 200) {
+        throw new Error('User ID not found in AsyncStorage.');
+      }
+      setUserData(response.data);
+
+    } catch (error) {
+      console.error('Error fetching user data: ', error);
+    } finally {
+      setTimeout(() => {
+        setLoading(false); // Set loading state to false when the data fetch is complete
+      }, 1000);
+    }
+  };
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     const getTheme = async () => {
+  //       const userDetails: any = await SecureStore.getItemAsync("user")
+  //       setUserData(JSON.parse(userDetails));
+  //     };
+  //     getTheme();
+  //   }, [])
+  // )
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserData();
+    }, []))
+  return loading ? <SettingSkeleton /> : (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <Header title="" />
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.profileContainer}>
             <Image
-              source={{ uri: userData?.profile_img }} // Replace with actual image URL
+              source={{ uri: userData?.data.profile_img }} // Replace with actual image URL
               style={styles.profileImage}
             />
           </View>
-          <Text style={styles.userName}>{userData?.name || 'N/A'}</Text>
-          <Text style={styles.userEmail}>{userData?.email || 'N/A'}</Text>
-          <Text style={styles.userStatus}>{userData?.org_name || 'N/A'}</Text>
+          <Text style={styles.userName}>{userData?.data.name || 'N/A'}</Text>
+          <Text style={styles.userEmail}>{userData?.data.email || 'N/A'}</Text>
+          <Text style={styles.userStatus}>{userData?.data.org_name || 'N/A'}</Text>
         </View>
 
         {/* Menu Items */}
@@ -58,7 +85,9 @@ const ProfileScreen = () => {
             </View>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={() => { navigate('subscription') }}>
+          <TouchableOpacity style={styles.menuItem}
+            onPress={() => { navigate('subscription') }}
+          >
             <View style={styles.list}>
               <Ionicons name="card-outline" size={25} color={COLORS.gray2} />
               <Text style={styles.menuText}>
