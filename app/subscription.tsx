@@ -66,7 +66,7 @@ const SubscriptionScreen = () => {
   const colors = { background: "white" }
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
-      <Header title="profile" />
+      <Header title="" />
       <View style={styles.subscriptionContainer}>
         <Text style={styles.subscriptionTitle}>Choose Your Subscription</Text>
         {

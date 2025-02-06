@@ -201,7 +201,7 @@ if (!form.password.trim()) {
               style={styles.button}
             />
             <View>
-              <Text style={styles.orText}>or continue with</Text>
+              {/* <Text style={styles.orText}>or continue with</Text>
 
               <View style={styles.socialContainer}>
                 <TouchableOpacity style={styles.socialButton}>
@@ -213,7 +213,7 @@ if (!form.password.trim()) {
                 <TouchableOpacity style={styles.socialButton}>
                   <FontAwesome name="google" size={24} color="red" />
                 </TouchableOpacity>
-              </View>
+              </View> */}
 
               <TouchableOpacity onPress={() => navigate("login")}>
                 <Text style={styles.signupText}>

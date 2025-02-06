@@ -47,6 +47,8 @@ const ElectricalAssistantScreen: React.FC = () => {
 
   // Function to send text message
   const sendMessage = async () => {
+    console.log("innnnnnnnnnnnn");
+    
     if (!message.trim()) return;
     const newMessage: Message = { id: String(messages.length + 1), text: { response: message }, sender: "user" };
     setMessages([...messages, newMessage]);
@@ -54,7 +56,7 @@ const ElectricalAssistantScreen: React.FC = () => {
 
     try {
       const response = await axios.post("https://ai.innovativetech.dev/ask", { question: message });
-      console.log(response.data.retrieved_images, "========================", response.data.retrieved_hyperlinks);
+      console.log(response.data, "========================");
 
       if (response.status !== 200) throw new Error("Failed to fetch response");
       setMessages((prev) => [
@@ -62,7 +64,7 @@ const ElectricalAssistantScreen: React.FC = () => {
         { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
       ]);
     } catch (error: any) {
-      console.log(error, "-----------------");
+      console.log(error.response.data, "-----------------");
     }
   };
 

@@ -35,7 +35,7 @@ const ForgetScreen = () => {
             <View style={[styles.container,
               //  { backgroundColor: colors.background }
                ]}>
-                <Header title="Forgot Password" />
+                <Header title="login" />
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={styles.passwordContainer}>
                         <Image

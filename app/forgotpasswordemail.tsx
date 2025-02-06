@@ -73,8 +73,6 @@ const ForgotPasswordEmail = () => {
   const loginHandler = async (email: any) => {
     if (validateForm()) {
     try {
-      console.log("------------------------------------------", email);
-
       const res = await apiClient.post("/auth/otp", { email });
       if (res.status !== 200) {
         throw new Error(res.data.msg);
@@ -91,7 +89,7 @@ const ForgotPasswordEmail = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Header title="Forgot Password" />
+        <Header title="forgetpasswordOption" />
         <ScrollView
           style={{ marginVertical: 54 }}
           showsVerticalScrollIndicator={false}

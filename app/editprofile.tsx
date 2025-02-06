@@ -162,7 +162,7 @@ const ProfileForm: React.FC = () => {
     <ProfileSkeleton />
   ) : (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
-      <Header title="profile" />
+      <Header title="" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           {/* Profile Image Picker */}

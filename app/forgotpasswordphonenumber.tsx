@@ -120,7 +120,7 @@ const ForgotPasswordPhoneNumber = () => {
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Header title="Forgot Password" />
+        <Header title="forgetpasswordOption" />
         <ScrollView
           style={{ marginVertical: 54 }}
           showsVerticalScrollIndicator={false}
