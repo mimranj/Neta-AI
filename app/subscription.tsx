@@ -11,21 +11,21 @@ import apiClient from "@/utils/axios-services";
 
 const plans = [
   {
-    title: "Free Tier",
-    description: ["Limited NEC code lookups", "Basic cost estimation"],
+    title: "Electrician Free Tier",
+    description: ["Electrical Assistant -- 5 Chats a Day"],
     price: "Free",
     icon: <Ionicons name="lock-open" size={24} color="gold" />
   },
   {
-    title: "Basic Paid Tier",
-    description: ["Enhanced lookups", "Detailed breakdowns", "Document analysis"],
+    title: "Pro Electrician Tier",
+    description: ["Electrical Assistant -- Unlimited Chats", "Unlimited Image/Document Upload Analyzer", "Verified Webpage with Seal"],
     price: "$9.99/month",
     amount: 999, // Amount in cents
     icon: <Ionicons name="document-text" size={24} color="white" />
   },
   {
-    title: "Premium Paid Tier",
-    description: ["Full access to all features", "Advanced analysis", "Branded proposal customization"],
+    title: "Master Electrician Tier",
+    description: ["Electrical Assistant -- Unlimited Chats", "Estimate Assistant Unlimited Chats", "Unlimited Image/Documents Uploads", "Logo Creation"],
     price: "$19.99/month",
     amount: 1999, // Amount in cents
     icon: <Ionicons name="star" size={24} color="orange" />
@@ -96,18 +96,18 @@ const SubscriptionScreen = () => {
 
 const styles = StyleSheet.create({
   subscriptionContainer: {
-    backgroundColor: COLORS.black,
+    // backgroundColor: COLORS.,
     flex: 1,
     padding: 10,
   },
   area: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    // backgroundColor: COLORS.white,
   },
   subscriptionTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "white",
+    // color: "white",
     textAlign: "center",
     marginBottom: 10,
   },

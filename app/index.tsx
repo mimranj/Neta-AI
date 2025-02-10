@@ -10,26 +10,22 @@ const data = [
   {
     title: "NEC Electrical Code Expert",
     usage: [
-      "✓ Type your NEC compliance question or upload a job image.",
-      "✓ Receive AI-powered NEC code summaries with compliance guidance.",
-      "✓ Click on provided hyperlinks for full NEC code references."
+      "✓ Type your NEC question or upload a job image.",
+      "✓ Receive NEC code summaries with compliance guidance.",
     ],
     benefits: [
       "✓ Ensures your work meets NEC standards effortlessly.",
-      "✓ Saves time by quickly retrieving relevant codes.",
-      "✓ Enhances job safety and accuracy with expert insights."
+      "✓ Enhances job safety and accuracy."
     ]
   },
   {
     title: "Inspection & Compliance Assistance",
     usage: [
       "✓ Upload job site images or reports to verify NEC code compliance.",
-      "✓ AI cross-checks with local codes and highlights potential violations.",
       "✓ Expedite inspections by submitting reports directly through the app."
     ],
     benefits: [
       "✓ Ensures your work passes inspections on the first attempt.",
-      "✓ Streamlines communication with county officials for faster approvals.",
       "✓ Saves time and money by avoiding re-inspection delays."
     ]
   },
@@ -37,28 +33,13 @@ const data = [
     title: "Electrical Troubleshooting & Job Assistance",
     usage: [
       "✓ Describe your electrical issue or upload a job image/document.",
-      "✓ AI analyzes the problem and suggests troubleshooting steps or solutions.",
       "✓ Receive step-by-step repair guides or recommended NEC code fixes."
     ],
     benefits: [
-      "✓ Quickly diagnose and resolve electrical issues with AI guidance.",
+      "✓ Quickly diagnose and resolve electrical issues.",
       "✓ Reduce errors and rework by following expert troubleshooting advice.",
-      "✓ Enhance efficiency with instant access to repair recommendations."
     ]
   },
-  {
-    title: "Electrical Work Proposal Assistant",
-    usage: [
-      "✓ Enter job details like labor, materials, and permits.",
-      "✓ AI generates an accurate cost estimate and project proposal.",
-      "✓ Download and share a branded PDF proposal with your company details."
-    ],
-    benefits: [
-      "✓ Eliminates manual calculations and speeds up proposal creation.",
-      "✓ Professional-looking estimates enhance client trust.",
-      "✓ Customizable branding helps grow your business presence."
-    ]
-  }
 ]
 
 const Card = ({ title, usage, benefits }: any) => (
@@ -101,7 +82,7 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: "#F8F9FA",
     alignItems: "center",
-    padding: 20,
+    padding: 12,
   },
   card: {
     backgroundColor: 'white',

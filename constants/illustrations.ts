@@ -2,8 +2,8 @@
 // const passwordSuccess = require("../assets/illustrations/password_success.png");
 const password = require("../assets/illustrations/password.png");
 const passwordDark = require("../assets/illustrations/password_dark.png");
-// const newPassword = require("../assets/illustrations/new_password.png");
-// const passwordSuccessDark = require("../assets/illustrations/password_success_dark.png");
+const newPassword = require("../assets/illustrations/new_password.png");
+const passwordSuccessDark = require("../assets/illustrations/password_success_dark.png");
 // const empty = require("../assets/illustrations/empty.png");
 // const notFound = require("../assets/illustrations/not_found.png");
 // const background = require("../assets/illustrations/background.png");
@@ -17,8 +17,8 @@ export default {
     passwordDark,
     // fingerprint,
     // passwordSuccess,
-    // newPassword,
-    // passwordSuccessDark,
+    newPassword,
+    passwordSuccessDark,
     // empty,
     // notFound,
     // background,

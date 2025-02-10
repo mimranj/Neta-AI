@@ -13,6 +13,7 @@ export default function RootLayout() {
         <Stack.Screen name="forgetpasswordOption" options={{ headerShown: false }} />
         <Stack.Screen name="forgotpasswordphonenumber" options={{ headerShown: false }} />
         <Stack.Screen name="forgotpasswordemail" options={{ headerShown: false }} />
+        <Stack.Screen name="createNewPassword" options={{ headerShown: false }} />
         <Stack.Screen name="electricalAssitant" options={{ headerShown: false }} />
         <Stack.Screen name="chats" options={{ headerShown: false }} />
         <Stack.Screen name="chatdetail" options={{ headerShown: false }} />

@@ -97,11 +97,13 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.imgContainer}>
       <Image
         source={images.logo}
         style={styles.logo}
         resizeMode="contain"
-      />
+        />
+        </View>
 
       <Text style={styles.title}>Login to Your Account</Text>
 
@@ -186,9 +188,13 @@ const styles = StyleSheet.create({
     top: 50,
     left: 20,
   },
+  imgContainer:{
+    width:"100%",
+    marginBottom:20
+  },
   logo: {
-    width: 120,
-    height: 50,
+    width: "auto",
+    height: 170,
     marginBottom: 20,
   },
   title: {

@@ -8,13 +8,13 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
- 
+
 import { Image } from "expo-image";
 import { useNavigation, useRouter } from "expo-router";
 import apiClient from "@/utils/axios-services";
 import CustomCheckbox from "@/components/CustomCheckBox";
 import MainButton from "@/components/MainButton";
- import { reducer } from "@/utils/reducers/formReducers";
+import { reducer } from "@/utils/reducers/formReducers";
 import Header from "@/components/Header";
 import images from "@/constants/images";
 import { COLORS, SIZES } from "@/constants";
@@ -41,50 +41,55 @@ const initialState = {
 const ForgotPasswordEmail = () => {
   const router = useRouter();
   const { navigate } = useNavigation<Nav>();
-  
-  
+
   // const { colors, dark } = useTheme();
   const colors = { background: "white" };
   const dark = false;
-  
-    const [form, setForm] = useState({email:""});
-        const [errors, setErrors] = useState<Partial<any>>({ });
+
+  const [form, setForm] = useState({ email: "" });
+  const [errors, setErrors] = useState<Partial<any>>({});
+  const [loading, setLoading] = useState<boolean>(false);
   const validateForm = (): boolean => {
-    let newErrors: any= {};
+    let newErrors: any = {};
 
     if (!form.email.trim()) {
-      newErrors.email = 'Email is required';
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-      newErrors.email = 'Enter a valid email address';
-  }
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Enter a valid email address";
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-};
+  };
   const inputChangedHandler = useCallback(
-    ( inputValue: string) => {
+    (inputValue: string) => {
       if (Object.keys(errors).length !== 0) {
         setErrors({});
       }
-        setForm((prev)=>({...prev,  email: inputValue }))
+      setForm((prev) => ({ ...prev, email: inputValue }));
     },
     [form.email]
   );
- 
+
   const loginHandler = async (email: any) => {
     if (validateForm()) {
-    try {
-      const res = await apiClient.post("/auth/otp", { email });
-      if (res.status !== 200) {
-        throw new Error(res.data.msg);
+      try {
+        setLoading(true)
+        const res = await apiClient.post("/auth/otp", { email });
+        console.log("forget password request response", res);
+
+        // if (res.status !== 200) {
+        //   throw new Error(res.data.msg);
+        // }
+        router.push({
+          pathname: "/createNewPassword" as any,
+          params: { email: JSON.stringify(email) }, // Pass plan as a parameter
+        });
+      } catch (error: any) {
+        Alert.alert("Error", error.response.data.msg);
+      }finally{
+        setLoading(false)
       }
-      router.push({
-        pathname: "/checkoutsession" as any,
-        params: { plan: JSON.stringify(email) }, // Pass plan as a parameter
-      });
-    } catch (error: any) {
-      Alert.alert("Error", error.response.data.msg);
     }
-  }
   };
   return (
     <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
@@ -111,16 +116,17 @@ const ForgotPasswordEmail = () => {
           >
             Enter to Your Email
           </Text>
-         
+
           <InputField
-                label="Email"
-                value={form.email}
-                onChangeText={(text) =>inputChangedHandler(text)}
-                placeholder="Enter Email Address"
-                error={errors?.email}
-            />
-           
+            label="Email"
+            value={form.email}
+            onChangeText={(text) => inputChangedHandler(text)}
+            placeholder="Enter Email Address"
+            error={errors?.email}
+          />
+
           <MainButton
+          isLoading={loading}
             title="Reset Password"
             filled
             onPress={() => loginHandler(form.email)}
