@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useCallback, useEffect, useReducer, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
- 
+
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
 
@@ -21,7 +21,7 @@ import MainButton from "@/components/MainButton";
 import CustomCheckbox from "@/components/CustomCheckBox";
 import InputField from "@/components/InputField";
 import { FontAwesome } from "@expo/vector-icons";
- 
+
 
 interface InputValues {
   name: string;
@@ -30,7 +30,7 @@ interface InputValues {
   password: string;
 }
 
- 
+
 type Nav = {
   navigate: (value: string) => void;
 };
@@ -53,7 +53,7 @@ const Signup = () => {
   const validateForm = (): boolean => {
     let newErrors: any = {};
 
-if (!form.password.trim()) {
+    if (!form.password.trim()) {
       newErrors.password = "Password can't be blank.";
     } else if (form.password.length < 6) {
       newErrors.password = "Password must be at least 6 characters.";
@@ -61,10 +61,10 @@ if (!form.password.trim()) {
 
     if (!form.phone_number.trim()) {
       newErrors.phone_number = "Password can't be blank.";
-    } 
-  if (form.phone_number.length<7) {
-    newErrors.phone_number =form.phone_number.length<7 ?"Phone number could not be less than 7 digits!":"Phone number could not be more than 7 digits!";
-  }
+    }
+    if (form.phone_number.length < 7) {
+      newErrors.phone_number = form.phone_number.length < 7 ? "Phone number could not be less than 7 digits!" : "Phone number could not be more than 7 digits!";
+    }
 
 
     if (!form.email.trim()) {
@@ -105,14 +105,14 @@ if (!form.password.trim()) {
         }
         Alert.alert(
           "success",
-           response?.data?.msg
+          response?.data?.msg
         );
         navigate("login");
-      } catch (error:any) {
+      } catch (error: any) {
         setIsLoading(false);
         Alert.alert(
           "Failed",
-          error.response.status===400?"User with this email already exists!":"Something went worng!"
+          error.response.status === 400 ? "User with this email already exists!" : "Something went worng!"
         );
         console.error("Error during signup:", error.response.data);
       }
@@ -126,7 +126,7 @@ if (!form.password.trim()) {
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Header title="" />
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.logoContainer}>
+          <View style={styles.imgContainer}>
             <Image
               source={images.logo}
               contentFit="contain"
@@ -194,7 +194,7 @@ if (!form.password.trim()) {
           </View>
           <View style={styles.centered}>
             <MainButton
-            isLoading={isLoading}
+              isLoading={isLoading}
               title="Sign Up"
               filled
               onPress={signupHandler}
@@ -236,12 +236,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 16,
     backgroundColor: COLORS.white,
   },
+  imgContainer: {
+    width: "100%",
+  },
   logo: {
-    width: 100,
-    height: 100,
+    width: "auto",
+    height: 150,
   },
   logoContainer: {
     alignItems: "center",
@@ -318,7 +321,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   orText: {
-    textAlign:"center",
+    textAlign: "center",
     marginVertical: 10,
     color: "gray",
   },
@@ -329,7 +332,7 @@ const styles = StyleSheet.create({
     color: "#2196F3",
     fontWeight: "bold",
   },
-  centered:{
+  centered: {
     justifyContent: "center",
     alignItems: "center",
   }

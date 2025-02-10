@@ -25,26 +25,26 @@ import ProfileSkeleton from "@/components/Skeletons/ProfileSkeleton";
 interface FormData {
   name: string;
   phone: string;
-  address: string;
+  // address: string;
   company: string;
   email: string;
   image: string | null;
   number_of_electricians:any,
   where_to_get_esupplies:string,
-  website:string
+  // website:string
 }
 
 const ProfileForm: React.FC = () => {
   const [form, setForm] = useState<FormData>({
     name: "",
     phone: "",
-    address: "",
+    // address: "",
     company: "",
     image: null,
     email: "",
     number_of_electricians:0,
     where_to_get_esupplies:"",
-    website:""
+    // website:""
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -79,19 +79,19 @@ console.log('response of profile: ' , response.data
         name: response.data.data.name,
         phone: response.data.data.phone_number,
         email: response.data.data.email,
-        address: response.data.data.address,
+        // address: response.data.data.address,
         company: response.data.data.org_name,
         image: response.data.data.profile_img,
         number_of_electricians:  `${response.data.data.number_of_electricians}`,
         where_to_get_esupplies:response.data.data.where_to_get_esupplies,
-        website:response.data.data.website
+        // website:response.data.data.website
       });
     } catch (error) {
       console.error("Error fetching user data: ", error);
     } finally {
       setTimeout(() => {
         setLoading(false); // Set loading state to false when the data fetch is complete
-      }, 2000);
+      }, 1000);
     }
   };
   
@@ -110,7 +110,7 @@ console.log('response of profile: ' , response.data
     } else if (!/^\d{10,15}$/.test(form.phone)) {
       newErrors.phone = "Enter a valid phone number";
     }
-    if (!form.address.trim()) newErrors.address = "Address is required";
+    // if (!form.address.trim()) newErrors.address = "Address is required";
     if (!form.company.trim()) newErrors.company = "Company name is required";
 
     if (!form.image) newErrors.image = "Profile image is required";
@@ -130,24 +130,24 @@ console.log('response of profile: ' , response.data
     const {
       name: fullName,
       phone: phoneNumber,
-      address,
+      // address,
       company: companyName,
       image: profilePicture,
       number_of_electricians,
       where_to_get_esupplies,
-      website
+      // website
 
     } = form;
     const password = "111";
     const nickname = "nickname";
     try {
       const img = await blobToBase64(profilePicture);
-
+      
       const profilePictureBase64 = `data:image/jpeg;base64,${img.img}`;
       const user = {
         name: fullName,
         phone_number: phoneNumber,
-        address,
+        // address,
         org_name: companyName,
         profile_img: {
           b64Img: profilePictureBase64,
@@ -157,9 +157,10 @@ console.log('response of profile: ' , response.data
         
         number_of_electricians:   parseInt(number_of_electricians),
         where_to_get_esupplies: where_to_get_esupplies,
-        website: website
-
+        // website: website
+        
       };
+      Alert.alert("Success", "Profile updated successfully!");
       const userId = await apiClient.put("/users/profile/uiy9798y8987", user);
       if (!userId) {
         throw new Error("User ID not found in AsyncStorage.");
@@ -208,6 +209,13 @@ console.log('response of profile: ' , response.data
           </View>
           {/* Input Fields */}
           <InputField
+            label="Company"
+            value={form.company}
+            onChangeText={(text) => setForm({ ...form, company: text })}
+            placeholder="Enter Company Name"
+            error={errors.company}
+          />
+          <InputField
             label="Name"
             value={form.name}
             onChangeText={(text) => setForm({ ...form, name: text })}
@@ -222,20 +230,14 @@ console.log('response of profile: ' , response.data
             error={errors.phone}
             keyboardType="phone-pad"
           />
-          <InputField
+          {/* <InputField
             label="Address"
             value={form.address}
             onChangeText={(text) => setForm({ ...form, address: text })}
             placeholder="Enter Address"
             error={errors.address}
-          />
-          <InputField
-            label="Company"
-            value={form.company}
-            onChangeText={(text) => setForm({ ...form, company: text })}
-            placeholder="Enter Company Name"
-            error={errors.company}
-          />
+          /> */}
+          
           <InputField
             label="Email"
             style={styles.input}
@@ -246,16 +248,16 @@ console.log('response of profile: ' , response.data
             error={errors.email}
             keyboardType="numeric"
           />
-          <InputField
+          {/* <InputField
             label="Website"
             value={form.website}
             onChangeText={(text) => setForm({ ...form, website: text })}
             placeholder="Enter Website"
             error={errors.website}
    
-          />
+          /> */}
           <InputField
-            label="Where to get esupplies"
+            label="Where do you get your esupplies?"
             value={form.where_to_get_esupplies}
             onChangeText={(text) => setForm({ ...form, where_to_get_esupplies: text })}
             placeholder="Enter here..."
