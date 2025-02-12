@@ -21,6 +21,7 @@ import Header from "@/components/Header";
 import apiClient from "@/utils/axios-services";
 import { Image } from "expo-image";
 import Markdown, { MarkdownIt } from "react-native-markdown-display";
+import * as SecureStore from 'expo-secure-store';
 
 type Message = {
   id: string;
@@ -37,6 +38,30 @@ const ElectricalAssistantScreen: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const flatListRef = useRef<FlatList>(null); // Ref for FlatList
+  async function getUserDetail() {
+    if (!message.trim()) return;
+    const userPlan = await SecureStore.getItemAsync('plan');
+    if (userPlan) {
+      const plan = JSON.parse(userPlan);
+      const currentDate = new Date().toISOString().split('T')[0];
+      const lastPromptDate = plan.lastPromptDate.split('T')[0];
+      // Check if the last prompt date is different from the current date
+      if (lastPromptDate !== currentDate) {
+        plan.promptCount = 0;
+        plan.lastPromptDate = new Date().toISOString();
+        await SecureStore.setItemAsync('user', JSON.stringify(plan));
+      }
+      if (plan.name === 'Free Tier' && plan.promptCount >= 5) {
+        Alert.alert(
+          'Limit Exceeded',
+          'You are using the free tier plan and have already submitted 5 prompts. You can submit more prompts tomorrow or buy the premium plan to continue unlimited daily prompts.'
+        );
+        return;
+      }
+      return plan;
+    }
+  }
+
 
   // Scroll to bottom when messages update
   useEffect(() => {
@@ -47,57 +72,55 @@ const ElectricalAssistantScreen: React.FC = () => {
 
   // Function to send text message
   const sendMessage = async () => {
-    console.log("innnnnnnnnnnnn");
-    
-    if (!message.trim()) return;
-    const newMessage: Message = { id: String(messages.length + 1), text: { response: message }, sender: "user" };
-    setMessages([...messages, newMessage]);
-    setMessage("");
-
-    try {
-      const response = await axios.post("https://ai.innovativetech.dev/ask", { question: message });
-      console.log(response.data, "========================");
-
-      if (response.status !== 200) throw new Error("Failed to fetch response");
-      setMessages((prev) => [
-        ...prev,
-        { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
-      ]);
-    } catch (error: any) {
-      console.log(error.response.data, "-----------------");
+    const plan = await getUserDetail();
+    if (plan) {
+      const newMessage: Message = { id: String(messages.length + 1), text: { response: message }, sender: "user" };
+      setMessages([...messages, newMessage]);
+      setMessage("");
+      try {
+        const response = await axios.post("https://ai.innovativetech.dev/ask", { question: message });
+        if (response.status !== 200) throw new Error("Failed to fetch response");
+        await SecureStore.setItemAsync('plan', JSON.stringify({ ...plan, promptCount: plan.promptCount + 1 }));
+        setMessages((prev) => [
+          ...prev,
+          { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
+        ]);
+      } catch (error: any) {
+        console.log(error.response.data, "-----------------");
+      }
     }
   };
 
   //--------------- upload
   // Function to handle PDF upload
   const uploadPDF = async () => {
-    const result = await DocumentPicker.getDocumentAsync({
-      type: "application/pdf",
-    });
-
-    if (result.canceled) return;
-    const file = result.assets[0];
-
-    const formData = new FormData();
-    formData.append("file", { uri: file.uri, name: file.name, type: file.mimeType } as any);
-
-    setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploading..." }, sender: 'user' }]);
-
-    try {
-      const response = await fetch("https://ai.innovativetech.dev/upload", {
-        method: "POST",
-        body: formData,
-        headers: { "Content-Type": "multipart/form-data" },
+    const plan = await getUserDetail();
+    if (plan) {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf",
       });
 
-      if (!response.ok) throw new Error("Upload failed");
-      setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploaded successfully" }, sender: 'user' }]);
-      const data: { response: string } = await response.json();
-      console.log(data, "dddddddddddddddddddddd");
+      if (result.canceled) return;
+      const file = result.assets[0];
 
-      setMessages((prev) => [...prev, { id: String(prev.length + 1), text: { response: data.response || "PDF uploaded successfully" }, sender: "ai" }]);
-    } catch (error) {
-      Alert.alert("Error", "Failed to upload file. Please try again.");
+      const formData = new FormData();
+      formData.append("file", { uri: file.uri, name: file.name, type: file.mimeType } as any);
+      setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploading..." }, sender: 'user' }]);
+      try {
+        const response = await fetch("https://ai.innovativetech.dev/upload", {
+          method: "POST",
+          body: formData,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        if (!response.ok) throw new Error("Upload failed");
+        await SecureStore.setItemAsync('plan', JSON.stringify({ ...plan, promptCount: plan.promptCount + 1 }));
+        setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploaded successfully" }, sender: 'user' }]);
+        const data: { response: string } = await response.json();
+        setMessages((prev) => [...prev, { id: String(prev.length + 1), text: { response: data.response || "PDF uploaded successfully" }, sender: "ai" }]);
+      } catch (error) {
+        Alert.alert("Error", "Failed to upload file. Please try again.");
+      }
     }
   };
 
@@ -105,12 +128,9 @@ const ElectricalAssistantScreen: React.FC = () => {
   const storeChatHistory = async (messagesArray: Message[]) => {
     // if (messages.length === 0) return; // Don't send empty chats
     try {
-      console.log("Saving chat history:", messagesArray);
-
       await apiClient.put("users/chats", {
         chat: messagesArray,
       });
-      Alert.alert("Success", "Chat history saved successfully");
     } catch (error: any) {
       console.log("Failed to save chat history:", error.response.data);
     }
@@ -179,7 +199,7 @@ const ElectricalAssistantScreen: React.FC = () => {
                         source={{ uri: img.image_url }}
                         resizeMode="contain"
                         alt={img.image_name}
-                        style={{ width: "auto", height: 200}}
+                        style={{ width: "auto", height: 200 }}
                         key={index}
                       />
                     )

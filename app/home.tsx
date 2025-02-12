@@ -21,7 +21,13 @@ const HomeScreen = () => {
             if (response.status != 200) {
                 throw new Error('User not found.');
             }
+            response.data.data.plan.promptCount=0
+            response.data.data.plan.lastPromptDate = new Date().toISOString();
             await SecureStore.setItemAsync('user', JSON.stringify(response.data.data));
+            const planData = await SecureStore.getItemAsync('plan');
+            if (!planData) {
+                await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data.plan));
+            }
         } catch (error: any) {
             console.error('Error fetching user data: ', error.response.data);
         } finally {

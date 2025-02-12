@@ -85,12 +85,10 @@ const LoginScreen = () => {
 
         console.log("Login successful, token saved.", response.data);
         router.replace("/home");
-        Alert.alert("Logged In Successfully!");
+        // Alert.alert("Logged In Successfully!");
       } catch (error: any) {
         setIsLoading(false);
-        router.replace("/home"); // for now, we will have to remove this
-        console.error("Login failed:===============", error.message);
-        Alert.alert(error.message);
+        Alert.alert("Login failed", "Please try again with correct credentials.");
       }
     }
   };
