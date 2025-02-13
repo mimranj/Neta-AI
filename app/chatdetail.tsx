@@ -67,7 +67,7 @@ const ChatDetailScreen = () => {
                                     }
                                 >{item.text.response}</Markdown>
                             </Text>
-                            {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
+                            {/* {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
                                 // Improved regex to handle various `<a>` formats
                                 const match = link.match(/<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/is);
 
@@ -90,7 +90,7 @@ const ChatDetailScreen = () => {
                                     })
                                 }
                             </View>
-                            }
+                            } */}
                         </View>
                     )}
                     contentContainerStyle={styles.messageContainer}

@@ -24,8 +24,8 @@ const HomeScreen = () => {
             response.data.data.plan.promptCount=0
             response.data.data.plan.lastPromptDate = new Date().toISOString();
             await SecureStore.setItemAsync('user', JSON.stringify(response.data.data));
-            const planData = await SecureStore.getItemAsync('plan');
-            if (!planData) {
+            const planData:any = await SecureStore.getItemAsync('plan');
+            if (!planData || planData.name != response.data.data.plan.name) {
                 await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data.plan));
             }
         } catch (error: any) {

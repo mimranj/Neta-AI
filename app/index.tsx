@@ -21,11 +21,11 @@ const data = [
   {
     title: "Inspection & Compliance Assistance",
     usage: [
-      "✓ Upload job site images or reports to verify NEC code compliance.",
-      "✓ Expedite inspections by submitting reports directly through the app."
+      "✓ Upload images to verify NEC code compliance.",
+      "✓ Expedite inspections directly through the app."
     ],
     benefits: [
-      "✓ Ensures your work passes inspections on the first attempt.",
+      "✓ Ensures your work passes inspections.",
       "✓ Saves time and money by avoiding re-inspection delays."
     ]
   },
@@ -36,7 +36,7 @@ const data = [
       "✓ Receive step-by-step repair guides or recommended NEC code fixes."
     ],
     benefits: [
-      "✓ Quickly diagnose and resolve electrical issues.",
+      "✓ Quickly diagnose and resolve electrical work.",
       "✓ Reduce errors and rework by following expert troubleshooting advice.",
     ]
   },
@@ -66,7 +66,7 @@ export default function Index() {
   return (
       <ScrollView>
         <View style={styles.container}>
-          <Image source={images.logo} style={styles.logo} />
+          <Image source={images.logo} resizeMode="contain" style={styles.logo} />
           {data.map((item, index) => (
             <Card key={index} {...item} />
           ))}
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
     marginBottom: 5,
-    color: '#333',
+    color: COLORS.primary,
   },
   bulletItem: {
     flexDirection: 'row',
@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logo: {
-    width: 200,
+    width: "80%",
     height: 100,
     // marginBottom: 12,
     marginTop: -22,
+    padding: 70,
   },
   bulletText: {
     fontSize: 14,

@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
 import { View, StyleSheet, Alert, TouchableOpacity, Image, Text } from 'react-native';
 import { confirmPlatformPayPayment, PlatformPay, PlatformPayButton, useStripe } from '@stripe/stripe-react-native';
 import apiClient from '@/utils/axios-services';
@@ -90,6 +91,7 @@ const SelectedPackageScreen = () => {
                     start_date: new Date(),
                     end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
                 }
+                await SecureStore.setItemAsync('plan', JSON.stringify(newSubscription));
                 const response = await apiClient.put('stripe/subscription', { newSubscription });
                 Alert.alert('Success', 'Payment completed!');
                 console.log('Payment completed successfully');

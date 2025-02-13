@@ -41,8 +41,6 @@ const SubscriptionScreen = () => {
   const [activePlan, setActivePlan] = useState("Free Tier");
   useEffect(() => {
     const fetchPlanData = async () => {
-      console.log("========================================");
-      
       try {
         const response = await apiClient.get('stripe/subscription');
         if (response.status !== 200) {
@@ -50,7 +48,7 @@ const SubscriptionScreen = () => {
           return
         }
         console.log(response.data.data.subscription);
-        
+
         response.data.data.subscription.map((plan: any) => {
           if (plan.status === "active") {
             setSelected(plan.name);
@@ -72,9 +70,9 @@ const SubscriptionScreen = () => {
         {
           plans.map((plan, index) => (
             <TouchableOpacity
-            key={index}
+              key={index}
               onPress={() => {
-                router.push({
+                plan.title != "Electrician Free Tier" && router.push({
                   pathname: '/selectedPackageScreen',
                   params: { plan: JSON.stringify(plan) }, // Pass plan as a parameter
                 });
@@ -112,7 +110,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   card: {
-    backgroundColor: "#0073b7",
+    backgroundColor: COLORS.primary,
     padding: 15,
     borderRadius: 10,
     marginVertical: 5,
@@ -137,7 +135,8 @@ const styles = StyleSheet.create({
   },
   selectedCard: {
     borderWidth: 4,
-    borderColor: "white",
+    borderColor: "lightgreen",
+    // backgroundColor: "#0073b7",
   },
   cardSelected: {
     fontSize: 14,

@@ -6,19 +6,16 @@ import {
   Alert,
   TouchableOpacity,
 } from "react-native";
-import React, { useCallback, useEffect, useReducer, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { Image } from "expo-image";
 import { useNavigation, useRouter } from "expo-router";
 import apiClient from "@/utils/axios-services";
-import CustomCheckbox from "@/components/CustomCheckBox";
 import MainButton from "@/components/MainButton";
-import { reducer } from "@/utils/reducers/formReducers";
 import Header from "@/components/Header";
 import images from "@/constants/images";
 import { COLORS, SIZES } from "@/constants";
-import Input from "@/components/Input";
 import InputField from "@/components/InputField";
 
 type Nav = {
@@ -170,8 +167,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   logo: {
-    width: 100,
+    width: "80%",
     height: 100,
+    // marginBottom: 32,
   },
   logoContainer: {
     alignItems: "center",

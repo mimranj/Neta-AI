@@ -42,7 +42,9 @@ const ElectricalAssistantScreen: React.FC = () => {
     if (!message.trim()) return;
     const userPlan = await SecureStore.getItemAsync('plan');
     if (userPlan) {
+      
       const plan = JSON.parse(userPlan);
+      console.log(plan, "pppppppppppppppppppppp");
       const currentDate = new Date().toISOString().split('T')[0];
       const lastPromptDate = plan.lastPromptDate.split('T')[0];
       // Check if the last prompt date is different from the current date
@@ -51,7 +53,7 @@ const ElectricalAssistantScreen: React.FC = () => {
         plan.lastPromptDate = new Date().toISOString();
         await SecureStore.setItemAsync('user', JSON.stringify(plan));
       }
-      if (plan.name === 'Free Tier' && plan.promptCount >= 5) {
+      if (plan.name === 'Electrician Free Tier' && plan.promptCount >= 5) {
         Alert.alert(
           'Limit Exceeded',
           'You are using the free tier plan and have already submitted 5 prompts. You can submit more prompts tomorrow or buy the premium plan to continue unlimited daily prompts.'
@@ -80,7 +82,7 @@ const ElectricalAssistantScreen: React.FC = () => {
       try {
         const response = await axios.post("https://ai.innovativetech.dev/ask", { question: message });
         if (response.status !== 200) throw new Error("Failed to fetch response");
-        await SecureStore.setItemAsync('plan', JSON.stringify({ ...plan, promptCount: plan.promptCount + 1 }));
+        plan.name === 'Electrician Free Tier' && await SecureStore.setItemAsync('plan', JSON.stringify({ ...plan, promptCount: plan.promptCount + 1 }));
         setMessages((prev) => [
           ...prev,
           { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
@@ -114,7 +116,7 @@ const ElectricalAssistantScreen: React.FC = () => {
         });
 
         if (!response.ok) throw new Error("Upload failed");
-        await SecureStore.setItemAsync('plan', JSON.stringify({ ...plan, promptCount: plan.promptCount + 1 }));
+        plan.name === 'Free Tier' && await SecureStore.setItemAsync('plan', JSON.stringify({ ...plan, promptCount: plan.promptCount + 1 }));
         setMessages([...messages, { id: String(messages.length + 1), text: { response: "File uploaded successfully" }, sender: 'user' }]);
         const data: { response: string } = await response.json();
         setMessages((prev) => [...prev, { id: String(prev.length + 1), text: { response: data.response || "PDF uploaded successfully" }, sender: "ai" }]);
@@ -177,7 +179,7 @@ const ElectricalAssistantScreen: React.FC = () => {
                   {item.text.response}
                 </Markdown>
               </Text>
-              {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
+              {/* {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
                 // Improved regex to handle various `<a>` formats
                 const match = link.match(/<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/is);
 
@@ -190,8 +192,8 @@ const ElectricalAssistantScreen: React.FC = () => {
                     <Text style={{ color: "blue", textDecorationLine: "underline" }}>{linkText.trim()}</Text>
                   </TouchableOpacity>
                 );
-              })}
-              {item.text.retrieved_images && item.text.retrieved_images.length > 0 && <View style={{ marginTop: 30 }}>
+              })} */}
+              {/* {item.text.retrieved_images && item.text.retrieved_images.length > 0 && <View style={{ marginTop: 30 }}>
                 {
                   item.text.retrieved_images.map((img: any, index: number) => {
                     return (
@@ -206,7 +208,7 @@ const ElectricalAssistantScreen: React.FC = () => {
                   })
                 }
               </View>
-              }
+              } */}
             </View>
           )}
           contentContainerStyle={styles.messageContainer}

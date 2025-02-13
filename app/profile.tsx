@@ -99,7 +99,7 @@ const ProfileScreen = () => {
             <Text style={styles.menuArrow}>Go ➡</Text>
           </TouchableOpacity>
 
-          <View style={styles.menuItem}>
+          {/* <View style={styles.menuItem}>
             <View style={styles.list}>
               <Ionicons name="eye-outline" size={25} color={COLORS.gray2} />
               <Text style={styles.menuText}>
@@ -110,7 +110,7 @@ const ProfileScreen = () => {
               value={isDarkMode}
               onValueChange={(value) => setIsDarkMode(value)}
             />
-          </View>
+          </View> */}
 
           <TouchableOpacity style={styles.logoutItem} onPress={async () => {
             await SecureStore.deleteItemAsync("token");

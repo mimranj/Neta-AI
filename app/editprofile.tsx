@@ -160,7 +160,6 @@ console.log('response of profile: ' , response.data
         // website: website
         
       };
-      Alert.alert("Success", "Profile updated successfully!");
       const userId = await apiClient.put("/users/profile/uiy9798y8987", user);
       if (!userId) {
         throw new Error("User ID not found in AsyncStorage.");
