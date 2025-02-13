@@ -23,8 +23,6 @@ const ChatDetailScreen = () => {
         const fetchChat = async () => {
             try {
                 const response = await apiClient.get(`users/chats/${chat_id}`);
-                console.log("-------------", response.data, "----------------");
-
                 setChat(response.data.chat.messages || []);
             } catch (error) {
                 console.error("Error fetching chat details:", error);

@@ -44,7 +44,6 @@ const ElectricalAssistantScreen: React.FC = () => {
     if (userPlan) {
       
       const plan = JSON.parse(userPlan);
-      console.log(plan, "pppppppppppppppppppppp");
       const currentDate = new Date().toISOString().split('T')[0];
       const lastPromptDate = plan.lastPromptDate.split('T')[0];
       // Check if the last prompt date is different from the current date
@@ -88,7 +87,7 @@ const ElectricalAssistantScreen: React.FC = () => {
           { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
         ]);
       } catch (error: any) {
-        console.log(error.response.data, "-----------------");
+        console.log("Error fetching plan at send message:",error.response.data);
       }
     }
   };

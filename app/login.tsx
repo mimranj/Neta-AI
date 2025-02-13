@@ -76,8 +76,6 @@ const LoginScreen = () => {
           await SecureStore.setItemAsync("token", token);
         }
         setIsLoading(false);
-
-        console.log("Login successful, token saved.", response.data);
         router.replace("/home");
         // Alert.alert("Logged In Successfully!");
       } catch (error: any) {

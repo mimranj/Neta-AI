@@ -42,9 +42,7 @@ const initialState = {
 };
 
 const CreateNewPassword = () => {
-  const { email } = useLocalSearchParams();
-  console.log("email to be used", email);
-
+  const { email }:any = useLocalSearchParams();
   const { navigate } = useNavigation<Nav>();
   const [formState, dispatchFormState] = useReducer(reducer, initialState);
   const [error, setError] = useState(null);
@@ -97,7 +95,6 @@ const CreateNewPassword = () => {
           otp: form.verification_otp,
           password: form.newPassword,
         });
-        console.log("forget password request response", res);
 
         if (res.status !== 200) {
           throw new Error(res.data.msg);

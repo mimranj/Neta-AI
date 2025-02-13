@@ -32,13 +32,10 @@ const ProfileScreen = () => {
     try {
       // Get the user ID from AsyncStorage
       const response = await apiClient.get('/users/profile/s233sa');
-      console.log('pro',response.data);
-      
       if (response.status != 200) {
         throw new Error('User ID not found in AsyncStorage.');
       }
       setUserData(response.data);
-
     } catch (error) {
       console.error('Error fetching user data: ', error);
     } finally {

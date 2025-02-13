@@ -47,8 +47,6 @@ const SubscriptionScreen = () => {
           Alert.alert('Error', response.data.message);
           return
         }
-        console.log(response.data.data.subscription);
-
         response.data.data.subscription.map((plan: any) => {
           if (plan.status === "active") {
             setSelected(plan.name);

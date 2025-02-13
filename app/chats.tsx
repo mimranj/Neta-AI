@@ -10,8 +10,6 @@ interface Chat {
 }
 
 const ChatsScreen = () => {
-    console.log("iiinnnnnnnnnnnnnnnnnnn----------------------");
-
     const [chats, setChats] = useState<Chat[]>([]);
     const [loading, setLoading] = useState(false);
     const navigation = useNavigation();
@@ -44,8 +42,6 @@ const ChatsScreen = () => {
     useEffect(() => {
         fetchChats();
     }, []);
-    console.log(chats);
-
     return (
         <View style={styles.container}>
             <FlatList

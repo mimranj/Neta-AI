@@ -29,8 +29,8 @@ interface FormData {
   company: string;
   email: string;
   image: string | null;
-  number_of_electricians:any,
-  where_to_get_esupplies:string,
+  number_of_electricians: any,
+  where_to_get_esupplies: string,
   // website:string
 }
 
@@ -42,8 +42,8 @@ const ProfileForm: React.FC = () => {
     company: "",
     image: null,
     email: "",
-    number_of_electricians:0,
-    where_to_get_esupplies:"",
+    number_of_electricians: 0,
+    where_to_get_esupplies: "",
     // website:""
   });
 
@@ -68,10 +68,6 @@ const ProfileForm: React.FC = () => {
     try {
       // Get the user ID from AsyncStorage
       const response = await apiClient.get("/users/profile/s233sa");
-console.log('response of profile: ' , response.data
-  
-);
-
       if (response.status != 200) {
         throw new Error("User ID not found in AsyncStorage.");
       }
@@ -82,8 +78,8 @@ console.log('response of profile: ' , response.data
         // address: response.data.data.address,
         company: response.data.data.org_name,
         image: response.data.data.profile_img,
-        number_of_electricians:  `${response.data.data.number_of_electricians}`,
-        where_to_get_esupplies:response.data.data.where_to_get_esupplies,
+        number_of_electricians: `${response.data.data.number_of_electricians}`,
+        where_to_get_esupplies: response.data.data.where_to_get_esupplies,
         // website:response.data.data.website
       });
     } catch (error) {
@@ -94,13 +90,13 @@ console.log('response of profile: ' , response.data
       }, 1000);
     }
   };
-  
+
   useFocusEffect(
     useCallback(() => {
       fetchUserData();
     }, [])
   );
- 
+
   const validateForm = (): boolean => {
     let newErrors: Partial<FormData> = {};
 
@@ -142,7 +138,7 @@ console.log('response of profile: ' , response.data
     const nickname = "nickname";
     try {
       const img = await blobToBase64(profilePicture);
-      
+
       const profilePictureBase64 = `data:image/jpeg;base64,${img.img}`;
       const user = {
         name: fullName,
@@ -154,11 +150,11 @@ console.log('response of profile: ' , response.data
           name: img.name,
           type: img.type,
         },
-        
-        number_of_electricians:   parseInt(number_of_electricians),
+
+        number_of_electricians: parseInt(number_of_electricians),
         where_to_get_esupplies: where_to_get_esupplies,
         // website: website
-        
+
       };
       const userId = await apiClient.put("/users/profile/uiy9798y8987", user);
       if (!userId) {
@@ -166,7 +162,7 @@ console.log('response of profile: ' , response.data
       }
       Alert.alert("Success", "Profile updated successfully!");
       navigation.goBack();
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error updating profile: ", error.response.data);
       Alert.alert("Error", "There was an issue updating the profile.");
     } finally {
@@ -236,7 +232,7 @@ console.log('response of profile: ' , response.data
             placeholder="Enter Address"
             error={errors.address}
           /> */}
-          
+
           <InputField
             label="Email"
             style={styles.input}
@@ -268,7 +264,7 @@ console.log('response of profile: ' , response.data
             onChangeText={(text) => setForm({ ...form, number_of_electricians: text })}
             placeholder="Enter number Eletricians"
             error={errors.number_of_electricians}
-            
+
           />
 
           {/* Submit Button */}
