@@ -20,7 +20,7 @@ const LoginScreen = () => {
     navigate: (value: string) => void;
   };
   const { navigate } = useNavigation<Nav>();
-  const [form, setForm] = useState({ email: "admin@gmail.com", password: "admin123" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<any>>({});
   const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -139,7 +139,7 @@ const LoginScreen = () => {
         style={styles.loginButton}
       />
       <TouchableOpacity onPress={() => navigate("forgetpasswordOption")}>
-        <Text style={styles.forgotPassword}>Forget the password ?</Text>
+        <Text style={styles.forgotPassword}>Forget password ?</Text>
       </TouchableOpacity>
 
       {/* <Text style={styles.orText}>or continue with</Text>

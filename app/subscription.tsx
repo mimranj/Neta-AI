@@ -12,24 +12,27 @@ import apiClient from "@/utils/axios-services";
 const plans = [
   {
     title: "Electrician Free Tier",
-    description: ["Electrical Assistant -- 5 Chats a Day"],
+    description: [{label:"Electrical Assistant - 5 Chats a Day", icon: <Ionicons name="chatbubble-outline" size={16} color="white" />}],
     price: "Free",
-    icon: <Ionicons name="lock-open" size={24} color="gold" />
+    icon: <Ionicons name="lock-closed-outline" size={24} color="white" />,
   },
   {
     title: "Pro Electrician Tier",
-    description: ["Electrical Assistant -- Unlimited Chats", "Unlimited Image/Document Upload Analyzer", "Verified Webpage with Seal"],
+    description: [
+      {label:"Unlimited Chats", icon: <Ionicons name="chatbubble-outline" size={16} color="white" />},
+      {label:"Unlimited Image/Documents Uploads Analyser", icon: <Ionicons name="image-outline" size={16} color="white" />}
+    ],
     price: "$9.99/month",
     amount: 999, // Amount in cents
-    icon: <Ionicons name="document-text" size={24} color="white" />
+    icon: <Ionicons name="flash-outline" size={24} color="white" />
   },
-  {
-    title: "Master Electrician Tier",
-    description: ["Electrical Assistant -- Unlimited Chats", "Estimate Assistant Unlimited Chats", "Unlimited Image/Documents Uploads", "Logo Creation"],
-    price: "$19.99/month",
-    amount: 1999, // Amount in cents
-    icon: <Ionicons name="star" size={24} color="orange" />
-  },
+  // {
+  //   title: "Master Electrician Tier",
+  //   description: ["Unlimited Chats", "Unlimited Image/Documents Uploads", "Logo Creation"],
+  //   price: "$19.99/month",
+  //   amount: 1999, // Amount in cents
+  //   icon: <Ionicons name="star" size={24} color="orange" />
+  // },
 ];
 type RootStackParamList = {
   RouteName: { card: { id: number } };
@@ -76,12 +79,26 @@ const SubscriptionScreen = () => {
                 });
               }}
               style={[styles.card, selected === plan.title && styles.selectedCard]}>
-              {plan.icon}
-              <Text style={styles.cardTitle}>{plan.title}</Text>
-              <Text style={styles.cardDescription}>
+              {/* {plan.icon} */}
+              <View style={styles.topRow}>
+                <View style={styles.iconAndTitle}>
+                  {plan.icon}
+                  <Text style={styles.cardTitle}>{plan.title}</Text>
+                </View>
+                <Text style={styles.cardPrice}>{plan.price}</Text>
+              </View>
+              {/* <Text style={styles.cardDescription}>
                 {plan.description.join(", ")}
-              </Text>
-              <Text style={styles.cardPrice}>{plan.price}</Text>
+              </Text> */}
+              {
+                plan.description.map((item, index) => (
+                <View key={index} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: 5, }}>
+                    {item.icon}
+                    <Text style={{ fontSize: 14, color: "white", marginLeft: 8 }}>{item.label}</Text>
+                  </View>
+                ))
+              }
+              {/* <Text style={styles.cardPrice}>{plan.price}</Text> */}
             </TouchableOpacity>
           ))
         }
@@ -100,6 +117,22 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: COLORS.white,
   },
+  topRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  iconAndTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#fff",
+    marginLeft: 8,
+  },
   subscriptionTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -112,14 +145,14 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginVertical: 5,
-    alignItems: "center",
+    // alignItems: "center",
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "white",
-    marginTop: 5,
-  },
+  // cardTitle: {
+  //   fontSize: 16,
+  //   fontWeight: "bold",
+  //   color: "white",
+  //   // marginTop: 5,
+  // },
   cardDescription: {
     fontSize: 14,
     color: "white",
@@ -132,7 +165,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   selectedCard: {
-    borderWidth: 4,
+    borderWidth: 2,
     borderColor: "lightgreen",
     // backgroundColor: "#0073b7",
   },

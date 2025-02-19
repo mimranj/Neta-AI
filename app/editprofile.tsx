@@ -252,7 +252,7 @@ const ProfileForm: React.FC = () => {
    
           /> */}
           <InputField
-            label="Where do you get your esupplies?"
+            label="Where do you get your supplies?"
             value={form.where_to_get_esupplies}
             onChangeText={(text) => setForm({ ...form, where_to_get_esupplies: text })}
             placeholder="Enter here..."

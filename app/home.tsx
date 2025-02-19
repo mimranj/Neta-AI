@@ -4,9 +4,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation, router } from 'expo-router';
 import MainButton from '@/components/MainButton';
-import { COLORS, SIZES } from '@/constants';
+import { COLORS, images, SIZES } from '@/constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import apiClient from '@/utils/axios-services';
+import { Image } from 'expo-image';
 
 type Nav = {
     navigate: (value: string) => void
@@ -49,13 +50,19 @@ const HomeScreen = () => {
                     {/* <TouchableOpacity onPress={() => navigate.}>
                     <Ionicons name="arrow-back" size={24} color="black" />
                 </TouchableOpacity> */}
-                    <Text style={styles.title}>Neta</Text>
+                    <Text style={styles.title}></Text>
                     <TouchableOpacity onPress={() => navigate('profile')}>
                         <Ionicons name="settings-outline" size={24} color="black" />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.centered}>
-                    <Text style={styles.welcomeText}>Welcome to {'\n'} <Text style={styles.highlight}>Neta-Ai</Text></Text>
+                    <View style={styles.imgContainer}>
+                          <Image
+                            source={images.logo}
+                            style={styles.logo}
+                            resizeMode="contain"
+                            />
+                            </View>
 
                     {/* <MainButton
                         title="Start Chat with Electrical Assistant"
@@ -69,12 +76,12 @@ const HomeScreen = () => {
                         style={styles.button}
                     /> */}
                     <MainButton
-                        title="Start Chat with Estimate Assistant"
+                        title="Start a new chat"
                         filled
                         onPress={() => {
                             router.push({
                                 pathname: '/electricalAssitant',
-                                params: { title: JSON.stringify({ page_title: "Estimate Assistant" }) }, // Pass plan as a parameter
+                                params: { title: JSON.stringify({ page_title: "Electrical Assistant" }) }, // Pass plan as a parameter
                             });
                         }}
                         style={styles.button}
@@ -99,6 +106,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    imgContainer:{
+        width:"50%",
+        marginBottom:20
+      },
+      logo: {
+        width: "auto",
+        height: 170,
+        marginBottom: 20,
+      },
     area: {
         flex: 1,
         backgroundColor: COLORS.white,
