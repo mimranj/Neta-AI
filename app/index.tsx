@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     padding: 6,
+    backgroundColor: "#fff",
   },
   card: {
     // backgroundColor: '#fff', // White background for the card
@@ -162,8 +163,8 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 18,
     fontWeight: '700',
-    marginBottom: 18,
-    marginTop: 10,
+    // marginBottom: 4,
+    marginTop: 16,
     color: COLORS.primary,
   },
   bulletRow: {
@@ -204,9 +205,10 @@ const styles = StyleSheet.create({
   blueText: {
     // color: '#0066CC',
     fontWeight: 'bold',
+    lineHeight: 22,
   },
   logo: {
-    width: "80%",
+    width: "60%",
     height: 100,
     marginTop: -22,
     padding: 70,
@@ -218,9 +220,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: COLORS.primary,
     paddingVertical: 12,
-    paddingHorizontal: 25,
+    paddingHorizontal: 35,
     borderRadius: 8,
-    marginTop: 10,
+    marginBottom: 10,
   },
 });
 

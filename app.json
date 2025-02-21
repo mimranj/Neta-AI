@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "neta-ai",
+    "name": "Neta",
     "slug": "neta-ai",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -28,7 +28,7 @@
           "processing"
         ]
       },
-      "privacyPolicyUrl": "https://askneta.com/privacy-and-policy/vacy",
+      "privacyPolicyUrl": "https://askneta.com/privacy-and-policy",
       "termsOfServiceUrl": "https://askneta.com/privacy-and-policy/terms"
     },
     "android": {

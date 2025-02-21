@@ -40,7 +40,7 @@ const ElectricalAssistantScreen: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const flatListRef = useRef<FlatList>(null); // Ref for FlatList
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   async function getUserDetail() {
     const userPlan = await SecureStore.getItemAsync('plan');
     if (userPlan) {
@@ -116,6 +116,7 @@ const ElectricalAssistantScreen: React.FC = () => {
     if (!message.trim()) return;
     const plan = await getUserDetail();
     if (plan) {
+      setLoading(true);
       const newMessage: Message = { id: String(messages.length + 1), text: { response: message }, sender: "user" };
       setMessages([...messages, newMessage]);
       setMessage("");
@@ -127,7 +128,9 @@ const ElectricalAssistantScreen: React.FC = () => {
           ...prev,
           { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
         ]);
+        setLoading(false);
       } catch (error: any) {
+        setLoading(false);
         console.log("Error fetching plan at send message:", error.response.data);
       }
     }
