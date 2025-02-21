@@ -5,18 +5,39 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "scheme": "neta-ai",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.mimranj.netaai",
+      "buildNumber": "1.0.0",
+      "supportsTablet": true,
+      "requireFullScreen": true,
+      "usesIcloudStorage": false,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to upload images.",
+        "NSFilesystemUsageDescription": "This app requires access to your file system to upload files.",
+        "UIBackgroundModes": [
+          "fetch",
+          "remote-notification",
+          "processing"
+        ]
+      },
+      "privacyPolicyUrl": "https://askneta.com/privacy-and-policy/vacy",
+      "termsOfServiceUrl": "https://askneta.com/privacy-and-policy/terms"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mimranj.netaai"
+      "package": "com.mimranj.netaai",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
