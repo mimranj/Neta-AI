@@ -13,7 +13,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import axios from "axios";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as DocumentPicker from "expo-document-picker";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -22,6 +22,7 @@ import apiClient from "@/utils/axios-services";
 import { Image } from "expo-image";
 import Markdown, { MarkdownIt } from "react-native-markdown-display";
 import * as SecureStore from 'expo-secure-store';
+import WelcomeModal from "@/components/Modal";
 
 type Message = {
   id: string;
@@ -38,11 +39,11 @@ const ElectricalAssistantScreen: React.FC = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const flatListRef = useRef<FlatList>(null); // Ref for FlatList
+  const [loading, setLoading] = useState(true);
   async function getUserDetail() {
     if (!message.trim()) return;
     const userPlan = await SecureStore.getItemAsync('plan');
     if (userPlan) {
-      
       const plan = JSON.parse(userPlan);
       const currentDate = new Date().toISOString().split('T')[0];
       const lastPromptDate = plan.lastPromptDate.split('T')[0];
@@ -50,7 +51,7 @@ const ElectricalAssistantScreen: React.FC = () => {
       if (lastPromptDate !== currentDate) {
         plan.promptCount = 0;
         plan.lastPromptDate = new Date().toISOString();
-        await SecureStore.setItemAsync('user', JSON.stringify(plan));
+        await SecureStore.setItemAsync('plan', JSON.stringify(plan));
       }
       if (plan.name === 'Electrician Free Tier' && plan.promptCount >= 5) {
         Alert.alert(
@@ -62,6 +63,36 @@ const ElectricalAssistantScreen: React.FC = () => {
       return plan;
     }
   }
+
+  const fetchUserData = async () => {
+    try {
+      const response = await apiClient.get('/stripe/subscription');
+      if (response.status != 200) {
+        throw new Error('User not found.');
+      }
+      response.data.data.promptCount = 0
+      response.data.data.lastPromptDate = new Date().toISOString();
+      if (response.data.data.name === "Electrician Free Tier") {
+        const planData: any = await SecureStore.getItemAsync('plan');
+        const planDetails = JSON.parse(planData);
+        if (!planDetails || planDetails.name !== response.data.data.name) {
+          await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data));
+        }
+      }else{
+        await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data));
+      }
+
+    } catch (error: any) {
+      console.error('Error fetching user data: ', error.response.data);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUserData();
+    }, [])
+  )
 
 
   // Scroll to bottom when messages update
@@ -87,7 +118,7 @@ const ElectricalAssistantScreen: React.FC = () => {
           { id: String(prev.length + 1), text: response.data || "I'm sorry, I couldn't generate a response.", sender: 'ai' },
         ]);
       } catch (error: any) {
-        console.log("Error fetching plan at send message:",error.response.data);
+        console.log("Error fetching plan at send message:", error.response.data);
       }
     }
   };

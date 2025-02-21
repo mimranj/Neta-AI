@@ -12,15 +12,15 @@ import apiClient from "@/utils/axios-services";
 const plans = [
   {
     title: "Electrician Free Tier",
-    description: [{label:"Electrical Assistant - 5 Chats a Day", icon: <Ionicons name="chatbubble-outline" size={16} color="white" />}],
+    description: [{ label: "Electrical Assistant - 5 Chats a Day", icon: <Ionicons name="chatbubble-outline" size={16} color="white" /> }],
     price: "Free",
     icon: <Ionicons name="lock-closed-outline" size={24} color="white" />,
   },
   {
     title: "Pro Electrician Tier",
     description: [
-      {label:"Unlimited Chats", icon: <Ionicons name="chatbubble-outline" size={16} color="white" />},
-      {label:"Unlimited Image/Documents Uploads Analyser", icon: <Ionicons name="image-outline" size={16} color="white" />}
+      { label: "Unlimited Chats", icon: <Ionicons name="chatbubble-outline" size={16} color="white" /> },
+      { label: "Unlimited Image/Documents Uploads Analyser", icon: <Ionicons name="image-outline" size={16} color="white" /> }
     ],
     price: "$9.99/month",
     amount: 999, // Amount in cents
@@ -50,12 +50,8 @@ const SubscriptionScreen = () => {
           Alert.alert('Error', response.data.message);
           return
         }
-        response.data.data.subscription.map((plan: any) => {
-          if (plan.status === "active") {
-            setSelected(plan.name);
-            setActivePlan(plan)
-          }
-        })
+        setSelected(response.data.data.name);
+        setActivePlan(response.data.data)
       } catch (error: any) {
         console.error('Error fetching plan data:', error.response.data);
       }
@@ -73,7 +69,7 @@ const SubscriptionScreen = () => {
             <TouchableOpacity
               key={index}
               onPress={() => {
-                plan.title != "Electrician Free Tier" && router.push({
+                plan.title !== "Electrician Free Tier" && router.push({
                   pathname: '/selectedPackageScreen',
                   params: { plan: JSON.stringify(plan) }, // Pass plan as a parameter
                 });
@@ -92,7 +88,7 @@ const SubscriptionScreen = () => {
               </Text> */}
               {
                 plan.description.map((item, index) => (
-                <View key={index} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: 5, }}>
+                  <View key={index} style={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginBottom: 5, }}>
                     {item.icon}
                     <Text style={{ fontSize: 14, color: "white", marginLeft: 8 }}>{item.label}</Text>
                   </View>
@@ -145,6 +141,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     marginVertical: 5,
+    paddingVertical: 30,
     // alignItems: "center",
   },
   // cardTitle: {

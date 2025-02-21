@@ -155,7 +155,7 @@ const SelectedPackageScreen = () => {
                 <View style={styles.cardDescription}>
                     {planData?.description?.map((point: any, index: any) => (
                         <Text key={index} style={styles.cardDescriptionText}>
-                            • {point}
+                            • {point.label}
                         </Text>
                     ))}
                 </View>

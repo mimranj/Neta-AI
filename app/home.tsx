@@ -13,35 +13,8 @@ type Nav = {
     navigate: (value: string) => void
 };
 const HomeScreen = () => {
-    const [loading, setLoading] = useState(true);
     const { navigate } = useNavigation<Nav>();
     const colors = { background: "white" };
-    const fetchUserData = async () => {
-        try {
-            const response = await apiClient.get('/users/profile/678b72732af391fdb2d2995b');
-            if (response.status != 200) {
-                throw new Error('User not found.');
-            }
-            response.data.data.plan.promptCount=0
-            response.data.data.plan.lastPromptDate = new Date().toISOString();
-            await SecureStore.setItemAsync('user', JSON.stringify(response.data.data));
-            const planData:any = await SecureStore.getItemAsync('plan');
-            if (!planData || planData.name != response.data.data.plan.name) {
-                await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data.plan));
-            }
-        } catch (error: any) {
-            console.error('Error fetching user data: ', error.response.data);
-        } finally {
-            setLoading(false);
-        }
-    };
-    useFocusEffect(
-        React.useCallback(() => {
-            fetchUserData();
-        }, [])
-    )
-
-
     return (
         <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
             <View style={styles.container}>
@@ -57,12 +30,12 @@ const HomeScreen = () => {
                 </View>
                 <View style={styles.centered}>
                     <View style={styles.imgContainer}>
-                          <Image
+                        <Image
                             source={images.logo}
                             style={styles.logo}
                             resizeMode="contain"
-                            />
-                            </View>
+                        />
+                    </View>
 
                     {/* <MainButton
                         title="Start Chat with Electrical Assistant"
@@ -106,15 +79,15 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    imgContainer:{
-        width:"50%",
-        marginBottom:20
-      },
-      logo: {
+    imgContainer: {
+        width: "50%",
+        marginBottom: 20
+    },
+    logo: {
         width: "auto",
         height: 170,
         marginBottom: 20,
-      },
+    },
     area: {
         flex: 1,
         backgroundColor: COLORS.white,

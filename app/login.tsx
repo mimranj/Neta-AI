@@ -15,6 +15,7 @@ import apiClient from "@/utils/axios-services";
 import MainButton from "@/components/MainButton";
 import CustomCheckbox from "@/components/CustomCheckBox";
 import { images } from "@/constants";
+import WelcomeModal from "@/components/Modal";
 const LoginScreen = () => {
   type Nav = {
     navigate: (value: string) => void;
@@ -24,10 +25,12 @@ const LoginScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<any>>({});
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+
   const validateForm = (): boolean => {
     let newErrors: any = {};
 
-    
+
     if (!form.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -76,7 +79,11 @@ const LoginScreen = () => {
           await SecureStore.setItemAsync("token", token);
         }
         setIsLoading(false);
-        router.replace("/home");
+        if (response.data.first_login) {
+          setShowModal(true);
+        } else {
+          router.replace("/home");
+        }
         // Alert.alert("Logged In Successfully!");
       } catch (error: any) {
         setIsLoading(false);
@@ -87,13 +94,17 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <WelcomeModal visible={showModal} onClose={() => {
+        setShowModal(false)
+        router.replace('/home');
+      }} />
       <View style={styles.imgContainer}>
-      <Image
-        source={images.logo}
-        style={styles.logo}
-        resizeMode="contain"
+        <Image
+          source={images.logo}
+          style={styles.logo}
+          resizeMode="contain"
         />
-        </View>
+      </View>
 
       <Text style={styles.title}>Login to Your Account</Text>
 
@@ -178,9 +189,9 @@ const styles = StyleSheet.create({
     top: 50,
     left: 20,
   },
-  imgContainer:{
-    width:"100%",
-    marginBottom:20
+  imgContainer: {
+    width: "100%",
+    marginBottom: 20
   },
   logo: {
     width: "auto",
