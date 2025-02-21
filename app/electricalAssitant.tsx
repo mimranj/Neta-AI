@@ -24,6 +24,7 @@ import { Image } from "expo-image";
 import Markdown, { MarkdownIt } from "react-native-markdown-display";
 import * as SecureStore from 'expo-secure-store';
 import WelcomeModal from "@/components/Modal";
+import TypingAnimation from "@/components/ChatAnimation";
 
 type Message = {
   id: string;
@@ -41,6 +42,7 @@ const ElectricalAssistantScreen: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const flatListRef = useRef<FlatList>(null); // Ref for FlatList
   const [loading, setLoading] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
   async function getUserDetail() {
     const userPlan = await SecureStore.getItemAsync('plan');
     if (userPlan) {
@@ -103,17 +105,30 @@ const ElectricalAssistantScreen: React.FC = () => {
   }, [messages]);
 
   const speakText = (text: string) => {
-    Speech.speak(text, {
-      language: "en", // Change language if needed
-      pitch: 1, // Adjust pitch (0.1 - 2)
-      rate: 1, // Adjust speed (0.1 - 2)
-    });
+    if (speaking) {
+      Speech.stop(); // Stop speech if already speaking
+      setSpeaking(false);
+    } else {
+      Speech.speak(text, {
+        language: "en",
+        pitch: 1,
+        rate: 1,
+        onDone: () => setSpeaking(false), // Reset speaking state when done
+        onStopped: () => setSpeaking(false),
+      });
+      setSpeaking(true);
+    }
   };
 
 
   // Function to send text message
   const sendMessage = async () => {
+    if (loading) return;
     if (!message.trim()) return;
+    if (speaking) {
+      Speech.stop();
+      setSpeaking(false);
+    }
     const plan = await getUserDetail();
     if (plan) {
       setLoading(true);
@@ -139,6 +154,10 @@ const ElectricalAssistantScreen: React.FC = () => {
   //--------------- upload
   // Function to handle PDF upload
   const uploadPDF = async () => {
+    if (speaking) {
+      Speech.stop();
+      setSpeaking(false);
+    }
     const plan = await getUserDetail();
     if (plan) {
       const result = await DocumentPicker.getDocumentAsync({
@@ -172,6 +191,10 @@ const ElectricalAssistantScreen: React.FC = () => {
   // Function to store chat history when leaving the screen
   const storeChatHistory = async (messagesArray: Message[]) => {
     // if (messages.length === 0) return; // Don't send empty chats
+    if (speaking) {
+      Speech.stop();
+      setSpeaking(false);
+    }
     try {
       await apiClient.put("users/chats", {
         chat: messagesArray,
@@ -187,12 +210,24 @@ const ElectricalAssistantScreen: React.FC = () => {
   }, [messages]);
 
   useEffect(() => {
+    const stopSpeechOnLeave = () => {
+      if (speaking) {
+        Speech.stop();
+        setSpeaking(false);
+      }
+    };
+
+    // Listen for navigation focus changes
+    const unsubscribe = navigation.addListener("blur", stopSpeechOnLeave);
+
     return () => {
+      stopSpeechOnLeave(); // Ensure it stops immediately when unmounting
       if (messagesRef.current.length > 0) {
         storeChatHistory(messagesRef.current);
       }
+      unsubscribe();
     };
-  }, [navigation]);
+  }, [navigation, speaking]);
   return (
     <SafeAreaView style={styles.area}>
       <View style={styles.mainContainer}>
@@ -205,9 +240,9 @@ const ElectricalAssistantScreen: React.FC = () => {
             onPress={() => router.navigate("/profile")}
           />
           <Text style={styles.title}>{pageTitle?.page_title}</Text>
-          <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={() => router.navigate("/chats")} />
+          {/* <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={() => router.navigate("/chats")} /> */}
           <Ionicons
-            name="save-outline"
+            name="add-circle-outline"
             size={24}
             color="white"
             style={styles.icon}
@@ -243,10 +278,11 @@ const ElectricalAssistantScreen: React.FC = () => {
                   {item.text.response}
                 </Markdown>
               </Text>
+
               {/* Speak Button for AI Messages */}
-              {item.sender === "ai" && (
+              {item.sender === "ai" && item.id === messages[messages.length - 1]?.id && (
                 <TouchableOpacity onPress={() => speakText(item.text.response)} style={styles.speakButton}>
-                  <Ionicons name="volume-high-outline" size={20} color="black" />
+                  <Ionicons name={speaking ? "stop-circle-outline" : "volume-high-outline"} size={20} color="black" />
                 </TouchableOpacity>
               )}
               {/* {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
@@ -285,7 +321,9 @@ const ElectricalAssistantScreen: React.FC = () => {
           onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })} // Auto-scroll on new content
           onLayout={() => flatListRef.current?.scrollToEnd({ animated: true })} // Auto-scroll on layout change
         />
-
+        <View style={{ marginVertical: 8 }}>
+          {loading && <TypingAnimation />}
+        </View>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -333,7 +371,7 @@ const styles = StyleSheet.create({
   title: { color: "white", fontSize: 18, fontWeight: "bold", },
   messageContainer: { paddingBottom: 20, paddingHorizontal: 10 },
   userMessage: { alignSelf: "flex-end", backgroundColor: COLORS.primary, color: "white", paddingHorizontal: 5, borderRadius: 5, marginVertical: 5, maxWidth: "95%" },
-  responseMessage: { alignSelf: "flex-start", backgroundColor: "#ddd", color: "#333", paddingHorizontal: 5, borderRadius: 5, marginVertical: 5, maxWidth: "95%" },
+  responseMessage: { alignSelf: "flex-start", backgroundColor: "#fff", color: "#333", paddingHorizontal: 5, borderRadius: 5, marginVertical: 5, maxWidth: "95%" },
   inputContainer: { flexDirection: "row", alignItems: "center", backgroundColor: "white", padding: 10, borderRadius: 10, margin: 10 },
   input: { flex: 1, padding: 8, fontSize: 16, color: "#333" },
   iconButton: { marginLeft: 10, backgroundColor: "#4A90E2", padding: 10, borderRadius: 8 },

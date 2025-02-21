@@ -1,6 +1,7 @@
 // const onboarding = require("../assets/images/adaptive-icon.png");
 // const ornament = require("../assets/images/ornament.png");
 const logo = require("../assets/images/logo.png");
+const user = require("../assets/images/user.png");
 
 // const user1 = require("../assets/images/users/user1.jpeg");
 // const user2 = require("../assets/images/users/user2.jpeg");
@@ -27,6 +28,7 @@ const logo = require("../assets/images/logo.png");
 
 export default {
     logo,
+    user
     // onboarding,
     // ornament,
 

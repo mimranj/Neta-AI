@@ -1,6 +1,6 @@
 import Header from '@/components/Header';
 import * as SecureStore from "expo-secure-store";
-import { COLORS } from '@/constants';
+import { COLORS, images } from '@/constants';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect, useNavigation } from 'expo-router';
 import React, { useCallback, useState } from 'react';
@@ -64,7 +64,7 @@ const ProfileScreen = () => {
         <View style={styles.header}>
           <View style={styles.profileContainer}>
             <Image
-              source={{ uri: userData?.data.profile_img }} // Replace with actual image URL
+              source={userData?.data.profile_img ? { uri: userData?.data.profile_img } : images.user}
               style={styles.profileImage}
             />
           </View>

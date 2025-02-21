@@ -8,6 +8,10 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 // import { SearchParams } from 'expo-router';
 import { useLocalSearchParams } from 'expo-router/build/hooks';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { COLORS, SIZES } from '@/constants';
+import { Ionicons } from '@expo/vector-icons';
+import Header from '@/components/Header';
 enum ContactField {
     EmailAddress = "emailAddress",
     Name = "name",
@@ -24,14 +28,10 @@ const requiredShippingAddressFields: ContactField[] = [
 ];
 
 const SelectedPackageScreen = () => {
-
-
     const navigation = useNavigation<NavigationProp<any>>();
-
     let planData
     const { plan } = useLocalSearchParams();
     const parsedPlan = plan ? JSON.parse(plan as string) : null;
-
     planData = parsedPlan
     const { initPaymentSheet, presentPaymentSheet } = useStripe();
     const [paymentSheetReady, setPaymentSheetReady] = useState(false);
@@ -147,51 +147,79 @@ const SelectedPackageScreen = () => {
         navigation.navigate('home');
     };
 
+    const colors = { background: "white" };
     return (
-        <View style={styles.container}>
-            {/* Package Details Card */}
-            <View style={styles.card}>
-                <Text style={styles.cardTitle}>{planData?.title}</Text>
-                <View style={styles.cardDescription}>
-                    {planData?.description?.map((point: any, index: any) => (
-                        <Text key={index} style={styles.cardDescriptionText}>
-                            • {point.label}
-                        </Text>
-                    ))}
+        <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+            <View style={styles.container}>
+                <View style={{marginBottom: 20}}>
+                    <Header title="" />
                 </View>
-                <Text style={styles.cardPrice}>{planData?.price}</Text>
-            </View>
+                {/* Package Details Card */}
+                <View style={styles.card}>
+                    <Text style={styles.cardTitle}>{planData?.title}</Text>
+                    <View style={styles.cardDescription}>
+                        {planData?.description?.map((point: any, index: any) => (
+                            <Text key={index} style={styles.cardDescriptionText}>
+                                • {point.label}
+                            </Text>
+                        ))}
+                    </View>
+                    <Text style={styles.cardPrice}>{planData?.price}</Text>
+                </View>
 
-            {/* Payment Buttons */}
-            <TouchableOpacity style={styles.button} onPress={openPaymentSheet}>
-                <View style={styles.content}>
-                    <Fontisto name="visa" size={24} color="black" />
-                    <Text style={styles.text}> Pay</Text>
-                </View>
-            </TouchableOpacity>
-            <PlatformPayButton
-                type={PlatformPay.ButtonType.Pay}
-                onPress={pay}
-                style={{
-                    width: '100%',
-                    height: 50,
-                    borderWidth: 1,
-                    borderColor: '#eee',
-                    borderRadius: 4,
-                }}
-            />
-        </View>
+                {/* Payment Buttons */}
+                <TouchableOpacity style={styles.button} onPress={openPaymentSheet}>
+                    <View style={styles.content}>
+                        <Fontisto name="visa" size={24} color="black" />
+                        <Text style={styles.text}> Pay</Text>
+                    </View>
+                </TouchableOpacity>
+                <PlatformPayButton
+                    type={PlatformPay.ButtonType.Pay}
+                    onPress={pay}
+                    style={{
+                        width: '100%',
+                        height: 50,
+                        borderWidth: 1,
+                        borderColor: '#eee',
+                        borderRadius: 4,
+                    }}
+                />
+            </View>
+        </SafeAreaView>
     );
 
 };
 
 const styles = StyleSheet.create({
+    area: {
+        flex: 1,
+        backgroundColor: COLORS.primary,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        backgroundColor: '#1EADFF',
+        padding: 15,
+        marginBottom: 20,
+        width: SIZES.width,
+        // borderRadius: 10,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#000',
+    },
     container: {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        padding: 20,
-        paddingTop: 50,
+        paddingHorizontal: 20,
+        // paddingTop: 50,
         backgroundColor: '#f9f9f9', // Light background for better card contrast
     },
     card: {

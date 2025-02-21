@@ -190,12 +190,12 @@ const styles = StyleSheet.create({
     left: 20,
   },
   imgContainer: {
-    width: "100%",
+    width: "70%",
     marginBottom: 20
   },
   logo: {
     width: "auto",
-    height: 170,
+    height: 150,
     marginBottom: 20,
   },
   title: {

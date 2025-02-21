@@ -21,7 +21,7 @@ const WelcomeModal = ({ visible, onClose }: any) => {
 
           {/* 🎊 Close Button */}
           <TouchableOpacity style={styles.button} onPress={onClose}>
-            <Text style={styles.buttonText}>Enjoye! 🚀</Text>
+            <Text style={styles.buttonText}>Enjoy! 🚀</Text>
           </TouchableOpacity>
         </View>
       </View>

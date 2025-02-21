@@ -71,7 +71,7 @@ const SubscriptionScreen = () => {
               onPress={() => {
                 plan.title !== "Electrician Free Tier" && router.push({
                   pathname: '/selectedPackageScreen',
-                  params: { plan: JSON.stringify(plan) }, // Pass plan as a parameter
+                  params: { plan: JSON.stringify({ title: plan.title, price: plan.price, amount: plan.amount }) }, // Pass plan as a parameter
                 });
               }}
               style={[styles.card, selected === plan.title && styles.selectedCard]}>

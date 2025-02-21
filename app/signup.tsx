@@ -72,7 +72,7 @@ const Signup = () => {
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
       newErrors.email = "Enter a valid email address";
     }
-
+    
     setErrors(newErrors);
 
     return Object.keys(newErrors).length === 0;
@@ -90,6 +90,11 @@ const Signup = () => {
   // Signup handler using Firebase Authentication
   const signupHandler = async () => {
     if (validateForm()) {
+      if(isChecked === false){
+        setErrors({password: "Please accept terms and conditions"});
+        return
+      }
+  
       setIsLoading(true);
       try {
         const user = {
@@ -240,7 +245,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   imgContainer: {
-    width: "100%",
+    width: "70%",
+    margin: "auto",
   },
   logo: {
     width: "auto",

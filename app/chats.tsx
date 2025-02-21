@@ -3,17 +3,21 @@ import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from "react
 import apiClient from "@/utils/axios-services";
 import { router, useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS } from "@/constants";
 
 interface Chat {
     _id: string;
     title: string;
     timestamp: string;
 }
-
+type Nav = {
+    navigate: (value: string) => void
+};
 const ChatsScreen = () => {
     const [chats, setChats] = useState<Chat[]>([]);
     const [loading, setLoading] = useState(false);
-    const navigation = useNavigation();
+    const { navigate } = useNavigation<Nav>();
 
     // Fetch Chats
     const fetchChats = async () => {
@@ -43,41 +47,73 @@ const ChatsScreen = () => {
     useEffect(() => {
         fetchChats();
     }, []);
+
+    const colors = { background: "white" };
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={chats}
-                keyExtractor={(item) => item._id}
-                refreshing={loading}
-                onRefresh={fetchChats}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                        style={styles.chatItem}
-                        onPress={() => {
-                            router.push({
-                                pathname: '/chatdetail',
-                                params: { chatId: JSON.stringify({ chat_id: item._id }) }, // Pass plan as a parameter
-                            });
-                        }}
-                    >
-                        <View style={styles.chatContent}>
-                            <Text style={styles.chatTitle}>{item.title}</Text>
-                            <Text style={styles.chatTimestamp}>{new Date(item.timestamp).toLocaleString()}</Text>
-                        </View>
-                        <TouchableOpacity style={styles.deleteButton} onPress={() => deleteChat(item._id)}>
-                            <Text style={styles.deleteText}>
-                                <Ionicons name="trash-bin-outline" size={20} color="white" style={styles.deleteText} onPress={() => router.navigate("/chats")} />
-                            </Text>
-                        </TouchableOpacity>
+        <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigate('home')}>
+                        <Ionicons name="arrow-back-outline" size={24} color="black" />
                     </TouchableOpacity>
-                )}
-            />
-        </View>
+                    <Text style={styles.title}>Previous Chats</Text>
+                    <Text style={styles.title}></Text>
+                </View>
+                <FlatList
+                    data={chats}
+                    keyExtractor={(item) => item._id}
+                    refreshing={loading}
+                    onRefresh={fetchChats}
+                    renderItem={({ item }) => (
+                        <TouchableOpacity
+                            style={styles.chatItem}
+                            onPress={() => {
+                                router.push({
+                                    pathname: '/chatdetail',
+                                    params: { chatId: JSON.stringify({ chat_id: item._id }) }, // Pass plan as a parameter
+                                });
+                            }}
+                        >
+                            <View style={styles.chatContent}>
+                                <Text style={styles.chatTitle}>{item.title}</Text>
+                                <Text style={styles.chatTimestamp}>{new Date(item.timestamp).toLocaleString()}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.deleteButton} onPress={() => deleteChat(item._id)}>
+                                <Text style={styles.deleteText}>
+                                    <Ionicons name="trash-bin-outline" size={20} color="white" style={styles.deleteText} onPress={() => router.navigate("/chats")} />
+                                </Text>
+                            </TouchableOpacity>
+                        </TouchableOpacity>
+                    )}
+                />
+            </View>
+        </SafeAreaView>
+
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#f4f4f4", padding: 10 },
+    area: {
+        flex: 1,
+        backgroundColor: COLORS.primary,
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingBottom: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ddd',
+        backgroundColor: '#1EADFF',
+        padding: 15,
+        // borderRadius: 10,
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#000',
+    },
+    container: { flex: 1, backgroundColor: "#f5f5f5" },
     chatItem: {
         flexDirection: "row",
         backgroundColor: "#fff",
