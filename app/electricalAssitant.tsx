@@ -10,6 +10,7 @@ import {
   ScrollView,
   Linking,
 } from "react-native";
+import * as Speech from "expo-speech";
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/constants";
 import axios from "axios";
@@ -41,7 +42,6 @@ const ElectricalAssistantScreen: React.FC = () => {
   const flatListRef = useRef<FlatList>(null); // Ref for FlatList
   const [loading, setLoading] = useState(true);
   async function getUserDetail() {
-    if (!message.trim()) return;
     const userPlan = await SecureStore.getItemAsync('plan');
     if (userPlan) {
       const plan = JSON.parse(userPlan);
@@ -78,7 +78,7 @@ const ElectricalAssistantScreen: React.FC = () => {
         if (!planDetails || planDetails.name !== response.data.data.name) {
           await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data));
         }
-      }else{
+      } else {
         await SecureStore.setItemAsync('plan', JSON.stringify(response.data.data));
       }
 
@@ -102,8 +102,18 @@ const ElectricalAssistantScreen: React.FC = () => {
     }
   }, [messages]);
 
+  const speakText = (text: string) => {
+    Speech.speak(text, {
+      language: "en", // Change language if needed
+      pitch: 1, // Adjust pitch (0.1 - 2)
+      rate: 1, // Adjust speed (0.1 - 2)
+    });
+  };
+
+
   // Function to send text message
   const sendMessage = async () => {
+    if (!message.trim()) return;
     const plan = await getUserDetail();
     if (plan) {
       const newMessage: Message = { id: String(messages.length + 1), text: { response: message }, sender: "user" };
@@ -175,7 +185,9 @@ const ElectricalAssistantScreen: React.FC = () => {
 
   useEffect(() => {
     return () => {
-      storeChatHistory(messagesRef.current);
+      if (messagesRef.current.length > 0) {
+        storeChatHistory(messagesRef.current);
+      }
     };
   }, [navigation]);
   return (
@@ -191,6 +203,25 @@ const ElectricalAssistantScreen: React.FC = () => {
           />
           <Text style={styles.title}>{pageTitle?.page_title}</Text>
           <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={() => router.navigate("/chats")} />
+          <Ionicons
+            name="save-outline"
+            size={24}
+            color="white"
+            style={styles.icon}
+            onPress={async () => {
+              if (messages.length === 0) {
+                Alert.alert("No Messages", "There is no chat to save.");
+                return;
+              }
+              try {
+                await storeChatHistory(messages); // Store the chat
+                setMessages([]); // Clear messages to start a new chat
+                Alert.alert("Chat Saved", "Your chat has been stored successfully!");
+              } catch (error) {
+                Alert.alert("Error", "Failed to save chat. Please try again.");
+              }
+            }}
+          />
         </View>
 
         <FlatList
@@ -209,6 +240,12 @@ const ElectricalAssistantScreen: React.FC = () => {
                   {item.text.response}
                 </Markdown>
               </Text>
+              {/* Speak Button for AI Messages */}
+              {item.sender === "ai" && (
+                <TouchableOpacity onPress={() => speakText(item.text.response)} style={styles.speakButton}>
+                  <Ionicons name="volume-high-outline" size={20} color="black" />
+                </TouchableOpacity>
+              )}
               {/* {item.text.retrieved_hyperlinks && item.text.retrieved_hyperlinks.map((link: any, index: number) => {
                 // Improved regex to handle various `<a>` formats
                 const match = link.match(/<a\s+[^>]*href="([^"]+)"[^>]*>(.*?)<\/a>/is);
@@ -277,6 +314,15 @@ const styles = StyleSheet.create({
     // paddingTop: 10,
     // height:100
     paddingBottom: -32
+  },
+  speakButton: {
+    marginVertical: 5,
+    // backgroundColor: "#4A90E2",
+    // padding: 2,
+    borderRadius: 5,
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
   },
   mainContainer: { backgroundColor: "#f0f0f0", height: "100%" },
   topbar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: COLORS.primary, padding: 10 },

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import apiClient from "@/utils/axios-services";
 import { router, useNavigation } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 interface Chat {
     _id: string;
@@ -64,7 +65,9 @@ const ChatsScreen = () => {
                             <Text style={styles.chatTimestamp}>{new Date(item.timestamp).toLocaleString()}</Text>
                         </View>
                         <TouchableOpacity style={styles.deleteButton} onPress={() => deleteChat(item._id)}>
-                            <Text style={styles.deleteText}>Delete</Text>
+                            <Text style={styles.deleteText}>
+                                <Ionicons name="trash-bin-outline" size={20} color="white" style={styles.deleteText} onPress={() => router.navigate("/chats")} />
+                            </Text>
                         </TouchableOpacity>
                     </TouchableOpacity>
                 )}
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
     chatContent: { flex: 1 },
     chatTitle: { fontSize: 16, fontWeight: "bold", color: "#333" },
     chatTimestamp: { fontSize: 12, color: "#666", marginTop: 5 },
-    deleteButton: { backgroundColor: "#ff4d4d", paddingVertical: 5, paddingHorizontal: 10, borderRadius: 5 },
+    deleteButton: { backgroundColor: "#ff4d4d", paddingVertical: 10, paddingHorizontal: 10, borderRadius: 50 },
     deleteText: { color: "#fff", fontWeight: "bold" },
 });
 
