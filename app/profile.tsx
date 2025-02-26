@@ -85,6 +85,16 @@ const ProfileScreen = () => {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.menuItem}
+            onPress={() => navigate('chats')}
+          >
+            <View style={styles.list}>
+              <Ionicons name="time-outline" size={25} color={COLORS.gray2} />
+              <Text style={styles.menuText}>
+                Chat History
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.menuItem}
             onPress={() => { navigate('subscription') }}
           >
             <View style={styles.list}>
@@ -95,7 +105,7 @@ const ProfileScreen = () => {
             </View>
             <Text style={styles.menuArrow}>Go ➡</Text>
           </TouchableOpacity>
-
+          {/* <Ionicons name="time-outline" size={24} color="white" style={styles.icon} onPress={() => router.navigate("/chats")} /> */}
           {/* <View style={styles.menuItem}>
             <View style={styles.list}>
               <Ionicons name="eye-outline" size={25} color={COLORS.gray2} />

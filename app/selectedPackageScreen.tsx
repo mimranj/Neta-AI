@@ -174,7 +174,7 @@ const SelectedPackageScreen = () => {
                         <Text style={styles.text}> Pay</Text>
                     </View>
                 </TouchableOpacity>
-                <PlatformPayButton
+                {/* <PlatformPayButton
                     type={PlatformPay.ButtonType.Pay}
                     onPress={pay}
                     style={{
@@ -184,7 +184,7 @@ const SelectedPackageScreen = () => {
                         borderColor: '#eee',
                         borderRadius: 4,
                     }}
-                />
+                /> */}
             </View>
         </SafeAreaView>
     );

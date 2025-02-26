@@ -15,18 +15,13 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.mimranj.netaai",
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "supportsTablet": true,
       "requireFullScreen": true,
       "usesIcloudStorage": false,
       "infoPlist": {
         "NSPhotoLibraryUsageDescription": "This app requires access to your photo library to upload images.",
-        "NSFilesystemUsageDescription": "This app requires access to your file system to upload files.",
-        "UIBackgroundModes": [
-          "fetch",
-          "remote-notification",
-          "processing"
-        ]
+        "NSDocumentsDirectoryUsageDescription": "This app needs access to the file system to upload PDFs."
       },
       "privacyPolicyUrl": "https://askneta.com/privacy-and-policy",
       "termsOfServiceUrl": "https://askneta.com/privacy-and-policy/terms"
@@ -37,7 +32,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.mimranj.netaai",
-      "versionCode": 1
+      "versionCode": 1,
+      "permissions": [
+        "READ_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -59,7 +57,6 @@
       [
         "@stripe/stripe-react-native",
         {
-          "merchantIdentifier": "apple.com.mimranj.netaai",
           "enableGooglePay": true
         }
       ]

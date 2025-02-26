@@ -5,6 +5,7 @@ import { router, useNavigation } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "@/constants";
+import Header from "@/components/Header";
 
 interface Chat {
     _id: string;
@@ -51,14 +52,15 @@ const ChatsScreen = () => {
     const colors = { background: "white" };
     return (
         <SafeAreaView style={[styles.area, { backgroundColor: colors.background }]}>
+            <Header title="" />
             <View style={styles.container}>
-                <View style={styles.header}>
+                {/* <View style={styles.header}>
                     <TouchableOpacity onPress={() => navigate('home')}>
                         <Ionicons name="arrow-back-outline" size={24} color="black" />
                     </TouchableOpacity>
                     <Text style={styles.title}>Previous Chats</Text>
                     <Text style={styles.title}></Text>
-                </View>
+                </View> */}
                 <FlatList
                     data={chats}
                     keyExtractor={(item) => item._id}

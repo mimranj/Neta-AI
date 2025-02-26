@@ -7,61 +7,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 
-// const data = [
-//   {
-//     title: "NEC Electrical Code Expert",
-//     usage: [
-//       "✓ Type your NEC question or upload a job image.",
-//       "✓ Receive NEC code summaries with compliance guidance.",
-//     ],
-//     benefits: [
-//       "✓ Ensures your work meets NEC standards effortlessly.",
-//       "✓ Enhances job safety and accuracy."
-//     ]
-//   },
-//   {
-//     title: "Inspection & Compliance Assistance",
-//     usage: [
-//       "✓ Upload images to verify NEC code compliance.",
-//       "✓ Expedite inspections directly through the app."
-//     ],
-//     benefits: [
-//       "✓ Ensures your work passes inspections.",
-//       "✓ Saves time and money by avoiding re-inspection delays."
-//     ]
-//   },
-//   {
-//     title: "Electrical Troubleshooting & Job Assistance",
-//     usage: [
-//       "✓ Describe your electrical issue or upload a job image/document.",
-//       "✓ Receive step-by-step repair guides or recommended NEC code fixes."
-//     ],
-//     benefits: [
-//       "✓ Quickly diagnose and resolve electrical work.",
-//       "✓ Reduce errors and rework by following expert troubleshooting advice.",
-//     ]
-//   },
-// ]
-
-// const Card = ({ title, usage, benefits }: any) => (
-//   <View style={styles.card}>
-//     <Text style={styles.cardTitle}>{title}</Text>
-
-//     <Text style={styles.sectionTitle}>How to use</Text>
-//     {usage.map((item: any, index: number) => (
-//       <View key={index} style={styles.bulletItem}>
-//         <Text style={styles.bulletText}>{item}</Text>
-//       </View>
-//     ))}
-
-//     <Text style={styles.sectionTitle}>Benefits</Text>
-//     {benefits.map((item: any, index: number) => (
-//       <View key={index} style={styles.bulletItem}>
-//         <Text style={styles.bulletText}>{item}</Text>
-//       </View>
-//     ))}
-//   </View>
-// );
 
 export default function Index() {
   return (
